@@ -1,0 +1,14 @@
+## for vim ##
+*.swp
+*~
+
+## for OS X ##
+.*DS_Store
+
+## General ##
+*.txt
+*.diff
+test*
+
+## for HeroinHero ##
+
