@@ -13,6 +13,7 @@ window.onload = function() {
 	
 		game.load.image("heroin_syringe", 'assets/images/heroinsyringe.png');
 		game.load.image("dino", 'assets/images/dino.png');
+		game.load.image("player2", 'assets/images/PlayerV2.png');
 
 		game.load.atlasJSONHash('ginger','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
 
@@ -24,6 +25,7 @@ window.onload = function() {
 		dino = game.add.sprite(500,300,'dino');
 		dino.scale.y = .08;
 		dino.scale.x = .08;
+		player2 = game.add.sprite(100,300,'player2');
 
 		player = game.add.sprite(0,200,'ginger');
 //		player.scale.x = .2;
