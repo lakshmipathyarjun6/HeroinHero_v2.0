@@ -8,8 +8,11 @@ window.onload = function() {
 	var speed = 4;
 
 	function preload(){
-		Phaser.Canvas.smoothEdgesEnabled = false;
+		Phaser.Canvas.setSmoothingEnabled(game.context,false);
 		game.stage.backgroundColor = '#ffffff';
+	
+		game.load.image("heroin_syringe", 'assets/images/heroinsyringe.png');
+		game.load.image("dino", 'assets/images/dino.png');
 
 		game.load.atlasJSONHash('ginger','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
 
@@ -17,7 +20,10 @@ window.onload = function() {
 
         function create () {
 
-		//game.add.sprite(0,0,'bg');
+		heroin_syringe = game.add.sprite(500,100,'heroin_syringe');
+		dino = game.add.sprite(500,300,'dino');
+		dino.scale.y = .08;
+		dino.scale.x = .08;
 
 		player = game.add.sprite(0,200,'ginger');
 		player.scale.x = .2;
