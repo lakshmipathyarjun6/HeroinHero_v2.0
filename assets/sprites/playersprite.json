@@ -15,22 +15,14 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
 	"sourceSize": {"w":640,"h":400}
-},
-"Player3.png":
-{
-	"frame": {"x":1280,"y":0,"w":640,"h":400},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
-	"sourceSize": {"w":640,"h":400}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",
 	"image": "playerspriteatlas.png",
 	"format": "RGBA8888",
-	"size": {"w":4096,"h":4096},
+	"size": {"w":1280,"h":400},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:7ea40df771f068f6393c9602cd5e053b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:4896043c6654fc16aa2c93851d05a3d4$"
 }
 }
