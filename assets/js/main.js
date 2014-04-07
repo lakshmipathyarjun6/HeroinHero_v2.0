@@ -28,11 +28,11 @@ window.onload = function() {
 		player2 = game.add.sprite(100,300,'player2');
 
 		player = game.add.sprite(0,200,'ginger');
-//		player.scale.x = .2;
-//		player.scale.y = .2;
+		player.scale.x = .2;
+		player.scale.y = .2;
 		player.animations.add('walk');
 
-		player.animations.play('walk',5,true);
+		player.animations.play('walk',7,true);
 
         }
 
