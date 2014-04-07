@@ -1,0 +1,28 @@
+{"frames": {
+
+"Player.png":
+{
+	"frame": {"x":0,"y":0,"w":640,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
+	"sourceSize": {"w":640,"h":400}
+},
+"Player2.png":
+{
+	"frame": {"x":0,"y":400,"w":640,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
+	"sourceSize": {"w":640,"h":400}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "playerspriteatlas.png",
+	"format": "RGBA8888",
+	"size": {"w":640,"h":800},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:df2a418d5b787a4b5fd59c6ec8393ad1$"
+}
+}
