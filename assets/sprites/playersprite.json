@@ -2,7 +2,7 @@
 
 "Player.png":
 {
-	"frame": {"x":0,"y":0,"w":640,"h":400},
+	"frame": {"x":2,"y":2,"w":640,"h":400},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
@@ -10,7 +10,23 @@
 },
 "Player2.png":
 {
-	"frame": {"x":0,"y":400,"w":640,"h":400},
+	"frame": {"x":644,"y":2,"w":640,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
+	"sourceSize": {"w":640,"h":400}
+},
+"Player3.png":
+{
+	"frame": {"x":2,"y":404,"w":640,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
+	"sourceSize": {"w":640,"h":400}
+},
+"Player4.png":
+{
+	"frame": {"x":644,"y":404,"w":640,"h":400},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":400},
@@ -21,8 +37,8 @@
 	"version": "1.0",
 	"image": "playerspriteatlas.png",
 	"format": "RGBA8888",
-	"size": {"w":640,"h":800},
+	"size": {"w":1286,"h":806},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:df2a418d5b787a4b5fd59c6ec8393ad1$"
+	"smartupdate": "$TexturePacker:SmartUpdate:2355a9b55ad577dd08aa4bf499e4a99b$"
 }
 }
