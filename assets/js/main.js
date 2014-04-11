@@ -10,9 +10,9 @@ window.onload = function() {
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
         
-        game.load.image("heroin_syringe", 'assets/images/heroinsyringe.png');
-        game.load.image("dino", 'assets/images/dino.png');
-        game.load.image("player2", 'assets/images/PlayerV2.png');
+        game.load.image("heroin_syringe", 'assets/images/heroin/heroinsyringe.png');
+        game.load.image("dino", 'assets/images/other/dino.png');
+        game.load.image("player2", 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash('ginger','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
 
     }
