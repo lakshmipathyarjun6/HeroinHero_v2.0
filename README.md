@@ -1,4 +1,4 @@
-HeroinHero_v2.0
+HeroinHero v2.0
 ===============
 
 A meaningful expansion to the timeless classic, Heroin Hero.
