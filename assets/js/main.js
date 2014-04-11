@@ -4,7 +4,6 @@ window.onload = function() {
 
     var game = new Phaser.Game(1024, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update });
 
-    var player;
     var speed = 4;
 
     function preload(){
@@ -29,29 +28,30 @@ window.onload = function() {
         player.scale.x = .2;
         player.scale.y = .2;
         player.animations.add('walk');
-        player.animations.play('walk',5,true);
+        player.animations.play('walk',10,true);
 
     }
+
 
     function update(){
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            player.body.x -= speed;
+            player.x -= speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            player.body.x += speed;
+            player.x += speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            player.body.y -= speed;
-            player.body.x += speed/3;
+            player.y -= speed;
+            player.x -= speed/3;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
-            player.body.y += speed;
-            player.body.x -= speed/3;
+            player.y += speed;
+            player.x += speed/3;
         }
     }
 
