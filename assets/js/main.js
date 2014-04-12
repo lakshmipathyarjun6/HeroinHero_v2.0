@@ -12,6 +12,7 @@ var WEED_KEY = 'alcohol';
 var LSD_KEY = 'alcohol';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
+var DEATH_KEY = 'death';
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -202,6 +203,7 @@ function main() {
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
+	game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
     game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
@@ -445,8 +447,10 @@ function main() {
             m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
         }
 
-
-
+        if (m_player1.highness <= 0)
+	{
+	    revealDeathScreen();
+	}
     }
 
     function collisionHandler(p, pkup) {
@@ -457,6 +461,10 @@ function main() {
         {
             m_player1.highness = MAX_HIGHNESS;
         }
+	if (m_player1.highness <= 0)
+	{
+	    revealDeathScreen();
+	}
     }
 
     function render() {
@@ -465,6 +473,10 @@ function main() {
         //game.debug.body(heroin_syringe);
     }
 
+    function revealDeathScreen()
+    {
+	death = game.add.tileSprite(0,0,game.width,game.height,'death');
+    }
 };
 
 
