@@ -199,7 +199,7 @@ function main() {
         pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,0,0,0);
         pause.scale.setTo(0.2,0.2);
         mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
-        mute.scale.setTo(0.2,0.2);
+        mute.scale.setTo(0.3,0.3);
 
         dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
@@ -400,8 +400,15 @@ function main() {
         dragon.animations.stop("fly",true);
     }
     function muteOnClick() {
-        mute.setFrames(0,1,0);
-        console.log("Mute");
+        if(!muted){
+            mute.setFrames(0,1,0);
+            console.log("Mute");
+            muted = true;
+        } else {
+            console.log("Unmute");
+            mute.setFrames(1,0,1);
+            muted = false;
+        }
     }
 
 };
