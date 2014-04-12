@@ -158,7 +158,7 @@ function main() {
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
     var speed = 4;
-    var floorSpeed = 2;
+    //var floorSpeed = 2;
     var audioelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
     BOUND_TOP = 200;
@@ -220,8 +220,6 @@ function main() {
     function update() {
   //      m_actorsList.push(new HeroinPickup(game, 2,1) );
         //console.log(m_actorsList.length );
-
-        floor.tilePosition.x += floorSpeed; //update floor tile pos
 
         var numPickups = m_actorsList.length;
 
@@ -312,55 +310,6 @@ function main() {
             }
         }  
 
-        /////////////////////////////
-        // Dragon Dance
-        ////////////////////////////
-
-
-        if (DRAGON_LEFT == 1)
-        {
-            if (dragon.x <= 10)
-            {
-            DRAGON_LEFT = 0;
-            }
-            else
-            {
-                dragon.x -= speed/2;
-            }
-        }
-        else
-        {
-            if (dragon.x >= 80)
-            {
-            DRAGON_LEFT = 1;
-            }
-            else
-            {
-                dragon.x += speed/2;
-            }
-        }
-        if (DRAGON_DOWN == 1)
-        {
-            if (dragon.y >= 350)
-            {
-            DRAGON_DOWN = 0;
-            }
-            else
-            {
-                dragon.y += speed/2;
-            }
-        }
-        else
-        {
-            if (dragon.y <= 90)
-            {
-            DRAGON_DOWN = 1;
-            }
-            else
-            {
-                dragon.y -= speed/2;
-            }
-        }  
 
         /////////////////////////////
         // Get user input
