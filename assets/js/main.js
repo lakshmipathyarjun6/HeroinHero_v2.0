@@ -180,8 +180,8 @@ function main() {
     function preload(){
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
-        game.load.image(PAUSE_BUTTON, 'assets/images/buttons/pause.png');
-        game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',236,278);
+        game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
+        game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
@@ -196,14 +196,12 @@ function main() {
         floor = game.add.tileSprite(0,game.height/2, game.width,game.height/2,'floor');
 
         //create pause button
-        pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,0,0,0);
-        pause.scale.setTo(0.2,0.2);
+        pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,1,0,1);
         pausekey = game.input.keyboard.addKey(Phaser.Keyboard.P);
         pausekey.onDown.add(pauseOnClick, this); 
 
         //create mute button
         mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
-        mute.scale.setTo(0.3,0.3);
         mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
         mutekey.onDown.add(muteOnClick, this); 
 
@@ -398,12 +396,22 @@ function main() {
     }
 
     function pauseOnClick() {
-        console.log("Nailed it");
-        k = new Phaser.Rectangle(300,300,300,300);
-        paused = true;
-        SCROLL_SPEED  = 0;
-        m_player1.animations.stop("walk",true);
-        dragon.animations.stop("fly",true);
+        if(!paused){
+            pause.setFrames(0,1,0);
+            console.log("Nailed it");
+            k = new Phaser.Rectangle(300,300,300,300);
+            paused = true;
+            SCROLL_SPEED  = 0;
+            m_player1.animations.stop("walk",true);
+            dragon.animations.stop("fly",true);
+        } else {
+            pause.setFrames(1,0,1);
+            paused = false;
+            SCROLL_SPEED  = 2;
+            m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
+            dragon.animations.play("fly",DRAGON_FLY_RATE,true);
+        }
+        
     }
     function muteOnClick() {
         if(!muted){
