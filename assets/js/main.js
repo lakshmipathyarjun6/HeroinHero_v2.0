@@ -43,11 +43,7 @@ window.onload = main();
 
 Actor = function (game, x, y, key)
 {
-    //this.x = x;
-    //this.y = y;
-
     // Derive from sprite
-    // this line is a bitch
     Phaser.Sprite.call(this, game, x, y, key);
 
 
@@ -151,7 +147,7 @@ function main() {
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
 
-	//audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
+    //audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
     }
 
     function create () {
@@ -164,22 +160,22 @@ function main() {
         dino.scale.y = .08;
         dino.scale.x = .08;
         player2 = game.add.sprite(100,300,PLAYER2_KEY);
-        m_player1 = game.add.sprite(0,200,PLAYER_KEY);
+        //m_player1 = game.add.sprite(0,200,PLAYER_KEY);
+        m_player1 = new Player(game, 0,200);
         m_player1.scale.x = .2;
         m_player1.scale.y = .2;
         m_player1.animations.add('walk');
         m_player1.animations.play('walk',10,true);
-        p1 = new Player(game, 5,1);
-	//audioelement.play();
-	audioelement.loop = true;
+    //audioelement.play();
+    audioelement.loop = true;
     }
 
-    // DEBUG
-    //a1 = new Actor(1,1);
+    m_actorsList = new Array(); // empty
 
 
-    function update(){
-        h1 = new HeroinPickup(game, 2,1);
+    function update() {
+        m_actorsList.push(new HeroinPickup(game, 2,1) );
+        //console.log(m_actorsList.length );
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
