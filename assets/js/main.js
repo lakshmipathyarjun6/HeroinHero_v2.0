@@ -41,21 +41,21 @@ window.onload = main();
 ///////////////////////////////////
 
 
-function Actor(game, x, y, key)
+Actor = function (game, x, y, key)
 {
     //this.x = x;
     //this.y = y;
 
     // Derive from sprite
     // this line is a bitch
-    //Phaser.Sprite.call(this, game, x, y, key);
+    Phaser.Sprite.call(this, game, x, y, key);
 
 
     this.isVisible = true; // default
     this.isAlive = true; // default
 
     // Add as a Sprite
-    //game.add.existing(this);
+    game.add.existing(this);
 };
 
 Actor.prototype = Object.create(Phaser.Sprite.prototype);
@@ -86,13 +86,14 @@ Actor.prototype.constructor = Actor;
 // Player class
 ///////////////////////////////////
 
-function Player(game, x, y)
+Player = function(game, x, y)
 {
     Actor.call(this, game, x, y, PLAYER_KEY);
     this.health = STARTING_HEALTH;
 }
 
 // correct the constructor pointer because it points to Person
+Player.prototype = Object.create(Actor.prototype);
 Player.prototype.constructor = Player;
 
 // perhaps walk method when I can implement it
@@ -101,12 +102,14 @@ Player.prototype.constructor = Player;
 // Pickup class -- virtual
 ///////////////////////////////////
 
-function Pickup(game, x, y, key, strength)
+Pickup = function (game, x, y, key, strength)
 {
     Actor.call(this, game, x, y, key, strength);
     this.strength = strength;
 }
 
+Pickup.prototype = Object.create(Actor.prototype);
+Pickup.prototype.constructor = Pickup;
 //Pickup.prototype.harmPlayer(p, amount)
 //{
 //    //p.health -= amount; // bug
@@ -116,11 +119,13 @@ function Pickup(game, x, y, key, strength)
 // Heroin class
 ///////////////////////////////////
 
-function HeroinPickup(game, x, y, key)
+HeroinPickup = function (game, x, y, key)
 {
     Pickup.call(this, game, x, y, HEROIN_KEY, 50);
 }
 
+HeroinPickup.prototype = Object.create(Pickup.prototype);
+HeroinPickup.prototype.constructor = HeroinPickup;
 
 ///////////////////////////////////
 // Main function
@@ -154,7 +159,7 @@ function main() {
         spr1 = new Phaser.Sprite(game, 100, 500, HEROIN_KEY);
         //game.add.existing(spr1);
 
-        heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
+        //heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
         dino = game.add.sprite(500,300,DRAGON_KEY);
         dino.scale.y = .08;
         dino.scale.x = .08;
@@ -164,17 +169,17 @@ function main() {
         m_player1.scale.y = .2;
         m_player1.animations.add('walk');
         m_player1.animations.play('walk',10,true);
+        p1 = new Player(game, 5,1);
 	//audioelement.play();
 	audioelement.loop = true;
     }
 
     // DEBUG
     //a1 = new Actor(1,1);
-    p1 = new Player(game, 5,1);
-    h1 = new HeroinPickup(game, 2,1);
 
 
     function update(){
+        h1 = new HeroinPickup(game, 2,1);
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
