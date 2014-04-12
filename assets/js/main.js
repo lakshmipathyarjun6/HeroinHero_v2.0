@@ -199,7 +199,7 @@ function main() {
 
 
     function update() {
-        m_actorsList.push(new HeroinPickup(game, 2,1) );
+  //      m_actorsList.push(new HeroinPickup(game, 2,1) );
         //console.log(m_actorsList.length );
 
         floor.tilePosition.x += floorSpeed; //update floor tile pos
@@ -215,7 +215,7 @@ function main() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) && m_player1.x > BOUND_LEFT)
         {
             m_player1.x -= speed;
-        }
+        } 
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && m_player1.x < BOUND_RIGHT)
         {
             m_player1.x += speed;
@@ -225,9 +225,7 @@ function main() {
             if(m_player1.x > BOUND_LEFT)
             {
                 m_player1.x -= speed/3;
-            } else {
-                floorSpeed = 3;
-            }
+            } 
             m_player1.y -= speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN) && m_player1.y < BOUND_BOTTOM)
@@ -250,14 +248,14 @@ function main() {
         {
             // heroin
             console.log("I'm making heroin!");
-            m_actorsList.push(game.add.sprite(100,100,HEROIN_KEY) );
+//            m_actorsList.push(game.add.sprite(100,100,HEROIN_KEY) );
         }
         else if (randInt >= 10 && randInt < 20)
         {
             // Bad pickup
             console.log("Fuck you!");
             // change this to the bad pickup
-            m_actorsList.push(game.add.sprite(100,300,HEROIN_KEY) );
+ //           m_actorsList.push(game.add.sprite(100,300,HEROIN_KEY) );
         }
 
             
