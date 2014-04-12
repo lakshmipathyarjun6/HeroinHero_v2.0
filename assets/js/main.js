@@ -184,14 +184,14 @@ function main() {
     // declare game object as global // or not
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
-    var speed = 4;
-    //var floorSpeed = 2;
+    var dragon_speed = 4;
+    var player_speed = 4;
     var audioelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
     BOUND_TOP = 200;
     BOUND_RIGHT = game.width-100;
     BOUND_LEFT = 300;
-    
+
 
 
     // List of Actors
@@ -203,7 +203,7 @@ function main() {
         game.stage.backgroundColor = '#ffffff';
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
-	game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
+    game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
     game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
@@ -294,7 +294,7 @@ function main() {
         m_player1.highness -= HIGHNESS_DECR_VAL;
         highnessMeter.width = m_player1.highness;
         //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
-        
+
         // refresh scoreCounter display
         bmpText.setText('Your score: ' + scoreCounter);
 
@@ -311,7 +311,7 @@ function main() {
             }
             else
             {
-                dragon.x -= speed/2;
+                dragon.x -= dragon_speed/2;
             }
         }
         else
@@ -322,7 +322,7 @@ function main() {
             }
             else
             {
-                dragon.x += speed/2;
+                dragon.x += dragon_speed/2;
             }
         }
         if (DRAGON_DOWN == 1)
@@ -333,7 +333,7 @@ function main() {
             }
             else
             {
-                dragon.y += speed/2;
+                dragon.y += dragon_speed/2;
             }
         }
         else
@@ -344,10 +344,11 @@ function main() {
             }
             else
             {
-                dragon.y -= speed/2;
+                dragon.y -= dragon_speed/2;
             }
-        }  
+        }
 
+    var rand = Math.floor( (Math.random()*1000)+1 ); 
 
         /////////////////////////////
         // Get user input
@@ -355,27 +356,60 @@ function main() {
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) && m_player1.x > BOUND_LEFT)
         {
-            m_player1.x -= speed;
-        } 
+        if(rand <= 50 && m_player1.highness >= 400)
+        {
+        m_player1.x += player_speed;
+        }
+        else
+        { 
+                m_player1.x -= player_speed;
+            }
+        }
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && m_player1.x < BOUND_RIGHT)
         {
-            m_player1.x += speed;
+        if(rand <= 50 && m_player1.highness >= 400)
+        {
+        m_player1.x -= player_speed;
+        }
+        else
+        { 
+                m_player1.x += player_speed;
+            }
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && m_player1.y > BOUND_TOP)
         {
             if(m_player1.x > BOUND_LEFT)
             {
-                m_player1.x -= speed/3;
-            } 
-            m_player1.y -= speed;
+                m_player1.x -= player_speed/3;
+            }
+        if(rand <= 50 && m_player1.highness >= 400)
+        {
+        m_player1.y += player_speed;
+        }
+        else
+        { 
+                m_player1.y -= player_speed;
+            }
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN) && m_player1.y < BOUND_BOTTOM)
         {
-            if(m_player1.x < BOUND_RIGHT)
+        if(m_player1.x < BOUND_RIGHT)
             {
-                m_player1.x += speed/3;
+                m_player1.x += player_speed/3;
             }
-            m_player1.y += speed;
+        if(rand <= 50 && m_player1.highness >= 400)
+        {
+        m_player1.y -= player_speed;
+        }
+        else
+        { 
+                m_player1.y += player_speed;
+            }
+        }
+
+        if(player_speed > 0)
+        {
+        player_speed -= 0.0002;
         }
 
         /////////////////////////////
@@ -411,7 +445,7 @@ function main() {
             m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
         }
 
-            
+
 
     }
 
@@ -419,14 +453,16 @@ function main() {
         pkup.isAlive = false; // kill him
         m_player1.highness += pkup.strength;
         scoreCounter += pkup.strength;
+        if (m_player1.highness > MAX_HIGHNESS)
+        {
+            m_player1.highness = MAX_HIGHNESS;
+        }
     }
 
     function render() {
         game.debug.geom(highnessMeter,'#ff0000');
         //game.debug.body(m_player1);
         //game.debug.body(heroin_syringe);
-	//bucket = new WaterBucketPickup(game,100,100);
-	//game.debug.body(bucket);
     }
 
 };
