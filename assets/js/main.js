@@ -3,6 +3,7 @@ var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
 var HIGHNESS_DECR_VAL = 0.1;
 
+var MENU_KEY = 'menu';
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
@@ -207,6 +208,7 @@ function main() {
     function preload(){
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
+        game.load.image(MENU_KEY, 'assets/images/menu/menu.png');
         game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
         game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
@@ -497,6 +499,7 @@ function main() {
         if(!paused){
             pause.setFrames(0,1,0);
             console.log("Nailed it");
+            game.add.sprite(MENU_KEY,0,0);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
             SCROLL_SPEED  = 0;
