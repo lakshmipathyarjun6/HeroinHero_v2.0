@@ -2,7 +2,7 @@
 window.onload = function() {
 
 
-    var game = new Phaser.Game(1024, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update });
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update });
 
     var speed = 4;
     var audioelement = document.createElement('audio');
@@ -14,7 +14,7 @@ window.onload = function() {
         game.load.image("heroin_syringe", 'assets/images/heroin/heroinsyringe.png');
         game.load.image("dino", 'assets/images/other/dino.png');
         game.load.image("player2", 'assets/images/playerV2/PlayerV2.png');
-        game.load.atlasJSONHash('ginger','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
+        game.load.atlasJSONHash('player1','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
 
 	audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
     }
@@ -26,11 +26,15 @@ window.onload = function() {
         dino.scale.y = .08;
         dino.scale.x = .08;
         player2 = game.add.sprite(100,300,'player2');
-        player = game.add.sprite(0,200,'ginger');
+
+        //setting up main character
+        player = game.add.sprite(game.width - 100,game.height/2,'player1');
         player.scale.x = .2;
         player.scale.y = .2;
         player.animations.add('walk');
         player.animations.play('walk',10,true);
+
+
 	audioelement.play();
 	audioelement.loop = true;
     }
