@@ -97,6 +97,23 @@ Player.prototype.constructor = Player;
 
 // perhaps walk method when I can implement it
 
+
+///////////////////////////////////
+// Dragon class
+///////////////////////////////////
+
+Dragon = function(game, x, y)
+{
+    Actor.call(this, game, x, y, DRAGON_KEY);
+}
+
+// correct the constructor pointer because it points to Person
+Dragon.prototype = Object.create(Actor.prototype);
+Dragon.prototype.constructor = Dragon;
+
+// perhaps walk method when I can implement it
+
+
 ///////////////////////////////////
 // Pickup class -- virtual
 ///////////////////////////////////
