@@ -21,12 +21,14 @@ var BOUND_RIGHT = 0;
 var DRAGON_LEFT = 0;
 var DRAGON_DOWN = 0;
 var PAUSE_BUTTON = 'pause';
+var MUTE_BUTTON = 'mute';
+var MUTE_STATE = 0;
 var paused = false;
+var muted = false;
 var DRAGON_FLY_RATE = 10;
 var PLAYER_WALK_RATE = 10;
 
 window.onload = main()
-
 //function include(filename)
 //{
 //    var head = document.getElementsByTagName('head')[0];
@@ -179,6 +181,7 @@ function main() {
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
         game.load.image(PAUSE_BUTTON, 'assets/images/buttons/pause.png');
+        game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',236,278);
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
@@ -195,6 +198,8 @@ function main() {
         //create pause button
         pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,0,0,0);
         pause.scale.setTo(0.2,0.2);
+        mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
+        mute.scale.setTo(0.2,0.2);
 
         dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
@@ -393,6 +398,10 @@ function main() {
         SCROLL_SPEED  = 0;
         m_player1.animations.stop("walk",true);
         dragon.animations.stop("fly",true);
+    }
+    function muteOnClick() {
+        mute.setFrames(0,1,0);
+        console.log("Mute");
     }
 
 };

@@ -1,0 +1,28 @@
+{"frames": {
+
+"loud.png":
+{
+	"frame": {"x":0,"y":0,"w":236,"h":283},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":283},
+	"sourceSize": {"w":236,"h":283}
+},
+"mute.png":
+{
+	"frame": {"x":0,"y":283,"w":236,"h":283},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":236,"h":283},
+	"sourceSize": {"w":236,"h":283}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "soundbuttonspritesheet.png",
+	"format": "RGBA8888",
+	"size": {"w":236,"h":566},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:92a4b1a2447f386f26db6eedb652ebd5$"
+}
+}
