@@ -198,8 +198,14 @@ function main() {
         //create pause button
         pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,0,0,0);
         pause.scale.setTo(0.2,0.2);
+        pausekey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+        pausekey.onDown.add(pauseOnClick, this); 
+
+        //create mute button
         mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
         mute.scale.setTo(0.3,0.3);
+        mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
+        mutekey.onDown.add(muteOnClick, this); 
 
         dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
