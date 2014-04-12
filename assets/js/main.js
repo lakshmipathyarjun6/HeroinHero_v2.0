@@ -181,7 +181,7 @@ function main() {
 
         heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
         game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
-        heroin_syringe.body.immovable = true;
+        //heroin_syringe.body.immovable = true;
 	dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
         dragon.scale.x = .3;
