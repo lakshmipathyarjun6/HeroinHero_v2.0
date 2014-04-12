@@ -474,7 +474,7 @@ function main() {
         game.debug.geom(highnessMeter,'#ff0000');
         //game.debug.body(m_player1);
         //game.debug.body(heroin_syringe);
-	    //bucket = new WaterBucketPickup(game,100,100);
+        //bucket = new WaterBucketPickup(game,100,100);
         //game.debug.body();
     }
 
