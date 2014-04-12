@@ -61,6 +61,9 @@ Actor = function (game, x, y, key)
 
     // Add as a Sprite
     game.add.existing(this);
+
+    // Enable game physics
+    game.physics.enable(this, Phaser.Physics.ARCADE);
 };
 
 Actor.prototype = Object.create(Phaser.Sprite.prototype);
@@ -189,16 +192,18 @@ function main() {
         //setup floor
         floor = game.add.tileSprite(0,game.height/2, game.width,game.height/2,'floor');
 
-        heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
-        game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
-        heroin_syringe.body.immovable = true;
-	dragon = game.add.sprite(10,300,DRAGON_KEY);
+        //heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
+        //heroin_syringe = new HeroinPickup(game, 500,100);
+        //game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
+        //heroin_syringe.body.immovable = true;
+	    dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
         dragon.scale.x = .3;
-	dragon.animations.add('fly');
-	dragon.animations.play('fly',10,true);
+	    dragon.animations.add('fly');
+	    dragon.animations.play('fly',10,true);
         player2 = game.add.sprite(100,300,PLAYER2_KEY);
         m_player1 = game.add.sprite(game.width-100,game.height/2,PLAYER_KEY);
+        m_player1 = new Player (game, game.width-100,game.height/2);
         game.physics.enable(m_player1,Phaser.Physics.ARCADE);
         //m_player1.body.velocity.x=-100;
         m_player1.scale.x = .2;
@@ -230,6 +235,12 @@ function main() {
         // Move the floor
         floor.tilePosition.x += SCROLL_SPEED; //update floor tile pos
 
+        // Check for collisions
+        for (var k=0; k < numPickups; k++)
+        {
+            game.physics.arcade.overlap(m_player1,m_actorsList[k],collisionHandler); //bind collisionHandler to player
+        }
+
         // Move each pickup
         for (var k=0; k < numPickups; k++)
         {
@@ -244,16 +255,15 @@ function main() {
         // Remove dead pickups
         for (var k=0; k < m_actorsList.length; k++)
         {
-            console.log(k);
             if (! m_actorsList[k].isAlive)
             {
                 // He's dead, Jim
+                m_actorsList[k].exists = false; // clear from screen
                 m_actorsList.splice(k,1); // remove that one element
             }
 
         }
 
-        game.physics.arcade.overlap(m_player1,heroin_syringe,collisionHandler); //bind collisionHandler to player
         high_level.width -= 0.3;
         //game.add.tween(high_level).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
 
@@ -341,32 +351,33 @@ function main() {
         /////////////////////////////
 
         var randInt = Math.floor( (Math.random()*1000)+1 ); // between 1 & 10
-        //console.log(randInt);
 
         if (randInt < 10)
         {
             // heroin
-            console.log("I'm making heroin!");
+            //console.log("I'm making heroin!");
             m_actorsList.push(new HeroinPickup(game, 100,100) );
         }
         else if (randInt >= 10 && randInt < 20)
         {
             // Bad pickup
             // change this to the bad pickup
-            m_actorsList.push(new HeroinPickup(game, 500,100) );
+            m_actorsList.push(new HeroinPickup(game, 100,500) );
         }
 
             
 
     }
 
-    function collisionHandler(obj1, obj2) {
-        obj2.exists = false;
-        high_level.width += 300;
+    function collisionHandler(p, pkup) {
+        pkup.isAlive = false; // kill him
+        high_level.width += pkup.strength;
     }
 
     function render() {
         game.debug.geom(high_level,'#ff0000');
+        //game.debug.body(m_player1);
+        //game.debug.body(heroin_syringe);
     }
 
 };
