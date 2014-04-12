@@ -1,7 +1,7 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.5;
+var HIGHNESS_DECR_VAL = 0.1;
 
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
@@ -13,6 +13,7 @@ var LSD_KEY = 'alcohol';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
+var RECOVERY_KEY = 'recovery';
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -215,6 +216,7 @@ function main()
         game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
 	game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
+	game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
@@ -583,8 +585,9 @@ function main()
     function revealDeathScreen()
     {
 	paused = true;
-	death = game.add.sprite(0,0,'death');
-	retry_button = game.add.button(game.world.centerX - 95, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
+	death = game.add.sprite(0,0,DEATH_KEY);
+	retry_button = game.add.button(game.world.centerX - 160, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
+	quit_button = game.add.button(game.world.centerX + 40, 400, QUIT_BUTTON, actionQuit, this, 0, 0, 0);
     }
     
     function actionRetry()
@@ -602,7 +605,19 @@ function main()
 	scoreCounter = 0;
 	death.destroy();
 	retry_button.destroy();
+	quit_button.destroy();
 	paused = false;		
+    }
+
+    function actionQuit()
+    {
+	for (var k=0; k < m_actorsList.length; k++)
+        {
+            m_actorsList[k].isAlive = false;
+        }
+	retry_button.destroy();
+	quit_button.destroy();
+	recovery = game.add.sprite(0,0,RECOVERY_KEY);
     }
 };
 
