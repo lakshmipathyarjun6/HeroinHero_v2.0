@@ -208,7 +208,12 @@ function main() {
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
     game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
     //  audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
+
+        // add text for score display
+        game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml');
     }
+
+    var bmpText;
 
     function create () {
         //setup floor
@@ -221,6 +226,7 @@ function main() {
         dragon.animations.play('fly',10,true);
 
 
+        // set up m_player1
         m_player1 = new Player (game, game.width-100,game.height/2, PLAYER_KEY);
         //m_player1.body.velocity.x=-100;
         m_player1.scale.x = .2;
@@ -230,7 +236,11 @@ function main() {
 
         //m_player2 = new Player (game, game.width-300,game.height/2+100, PLAYER2_KEY);
 
+        // highness meter & score counter
         highnessMeter = new Phaser.Rectangle(0,0,m_player1.highness,10);
+        scoreCounter = 0; // initial score
+        bmpText = game.add.bitmapText(300, 100, 'desyrel','Your score: ',20);
+
     //  cropRect = {x : 0, y : 0 , width : 400, height : 10};
     //   game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
     //  audioelement.play();
@@ -245,9 +255,6 @@ function main() {
 
 
     function update() {
-  //      m_actorsList.push(new HeroinPickup(game, 2,1) );
-        //console.log(m_actorsList.length );
-
         var numPickups = m_actorsList.length;
 
         // Move the floor
@@ -287,6 +294,10 @@ function main() {
         m_player1.highness -= HIGHNESS_DECR_VAL;
         highnessMeter.width = m_player1.highness;
         //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
+        
+        // refresh scoreCounter display
+        bmpText.setText('Your score: ' + scoreCounter);
+
 
         /////////////////////////////
         // Move the Dragon
@@ -296,7 +307,7 @@ function main() {
         {
             if (dragon.x <= 10)
             {
-            DRAGON_LEFT = 0;
+                DRAGON_LEFT = 0;
             }
             else
             {
@@ -307,7 +318,7 @@ function main() {
         {
             if (dragon.x >= 80)
             {
-            DRAGON_LEFT = 1;
+                DRAGON_LEFT = 1;
             }
             else
             {
@@ -318,7 +329,7 @@ function main() {
         {
             if (dragon.y >= 350)
             {
-            DRAGON_DOWN = 0;
+                DRAGON_DOWN = 0;
             }
             else
             {
@@ -329,7 +340,7 @@ function main() {
         {
             if (dragon.y <= 90)
             {
-            DRAGON_DOWN = 1;
+                DRAGON_DOWN = 1;
             }
             else
             {
@@ -407,6 +418,7 @@ function main() {
     function collisionHandler(p, pkup) {
         pkup.isAlive = false; // kill him
         m_player1.highness += pkup.strength;
+        scoreCounter += pkup.strength;
     }
 
     function render() {
