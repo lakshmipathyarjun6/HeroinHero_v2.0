@@ -32,7 +32,7 @@ function main() {
     function create () {
 
         //setup floor
-        floor = 
+        floor = game.add.tileSprite(0,game.height/2, game.width,game.height/2,'floor');
 
         heroin_syringe = game.add.sprite(500,100,'heroin_syringe');
         game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
@@ -63,6 +63,9 @@ function main() {
 
 
     function update(){
+
+        //update floor
+        floor.tilePosition.x += 2;
 
         game.physics.arcade.overlap(player,heroin_syringe,collisionHandler);
         high_level.width -= 0.3;
