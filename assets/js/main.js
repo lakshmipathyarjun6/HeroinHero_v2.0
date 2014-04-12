@@ -1,9 +1,11 @@
 // GLOBAL VALUES
 var STARTING_HEALTH = 100;
+var MAX_HEALTH = 800;
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
+
 
 
 
@@ -39,18 +41,25 @@ window.onload = main();
 ///////////////////////////////////
 
 
-function Actor(x, y, key)
+function Actor(game, x, y, key)
 {
-    this.x = x;
-    this.y = y;
-    // call game sprite constructor
-    //game.add.sprite.call(this, x, y, key);
-    //this = game.add.sprite(x,y,key);
+    //this.x = x;
+    //this.y = y;
+
+    // Derive from sprite
+    // this line is a bitch
+    //Phaser.Sprite.call(this, game, x, y, key);
 
 
     this.isVisible = true; // default
     this.isAlive = true; // default
-}
+
+    // Add as a Sprite
+    //game.add.existing(this);
+};
+
+Actor.prototype = Object.create(Phaser.Sprite.prototype);
+Actor.prototype.constructor = Actor;
 
 // Member functions
 //Actor.prototype.setAlive = function(val)
@@ -77,9 +86,9 @@ function Actor(x, y, key)
 // Player class
 ///////////////////////////////////
 
-function Player(x, y)
+function Player(game, x, y)
 {
-    Actor.call(this, x, y, PLAYER_KEY);
+    Actor.call(this, game, x, y, PLAYER_KEY);
     this.health = STARTING_HEALTH;
 }
 
@@ -92,18 +101,24 @@ Player.prototype.constructor = Player;
 // Pickup class -- virtual
 ///////////////////////////////////
 
-function Pickup(x, y, key)
+function Pickup(game, x, y, key, strength)
 {
-    Actor.call(this, x, y, key);
+    Actor.call(this, game, x, y, key, strength);
+    this.strength = strength;
 }
+
+//Pickup.prototype.harmPlayer(p, amount)
+//{
+//    //p.health -= amount; // bug
+//}
 
 ///////////////////////////////////
 // Heroin class
 ///////////////////////////////////
 
-function HeroinPickup(x, y, key)
+function HeroinPickup(game, x, y, key)
 {
-    Pickup.call(this, x, y, HEROIN_KEY);
+    Pickup.call(this, game, x, y, HEROIN_KEY, 50);
 }
 
 
@@ -116,8 +131,8 @@ function main() {
 
 
 
-    // declare game object as global
-    game = new Phaser.Game(1024, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update });
+    // declare game object as global // or not
+    var game = new Phaser.Game(1024, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update });
 
     var speed = 4;
     var audioelement = document.createElement('audio');
@@ -136,6 +151,9 @@ function main() {
 
     function create () {
 
+        spr1 = new Phaser.Sprite(game, 100, 500, HEROIN_KEY);
+        //game.add.existing(spr1);
+
         heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
         dino = game.add.sprite(500,300,DRAGON_KEY);
         dino.scale.y = .08;
@@ -152,8 +170,8 @@ function main() {
 
     // DEBUG
     //a1 = new Actor(1,1);
-    p1 = new Player(5,1);
-    h1 = new HeroinPickup(2,1);
+    p1 = new Player(game, 5,1);
+    h1 = new HeroinPickup(game, 2,1);
 
 
     function update(){
