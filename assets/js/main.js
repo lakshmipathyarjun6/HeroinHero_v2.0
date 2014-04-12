@@ -185,8 +185,8 @@ WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 ///////////////////////////////////
 
 
-function main() {
-
+function main()
+{
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
@@ -204,7 +204,8 @@ function main() {
     m_actorsList = new Array();
 
 
-    function preload(){
+    function preload()
+    {
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
         game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
@@ -223,7 +224,8 @@ function main() {
 
     var bmpText;
 
-    function create () {
+    function create ()
+    {
         //setup floor
         floor = game.add.tileSprite(0,game.height/2, game.width,game.height/2,'floor');
 
@@ -259,12 +261,10 @@ function main() {
         scoreCounter = 0; // initial score
         bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
-    //  cropRect = {x : 0, y : 0 , width : 400, height : 10};
-    //   game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-    //  audioelement.play();
-    //  audioelement.loop = true;
-
-
+        //cropRect = {x : 0, y : 0 , width : 400, height : 10};
+        //game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+        //audioelement.play();
+        //audioelement.loop = true;
 
 
     }
@@ -272,9 +272,12 @@ function main() {
     m_actorsList = new Array(); // empty
 
 
-    function update() {
+    function update()
+    {
 
-            if(!paused) {
+        if(!paused)
+        {
+
             // check player's death
             if (! m_player1.isAlive)
             {
@@ -471,7 +474,7 @@ function main() {
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
 
-        } // I hope this curly brace goes here
+        }
 
     }
 
@@ -509,7 +512,7 @@ function main() {
             m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
             dragon.animations.play("fly",DRAGON_FLY_RATE,true);
         }
-        
+
     }
     function muteOnClick() {
         if(!muted){
@@ -531,5 +534,6 @@ function endOfGame(endScore)
 
     // todo
     alert("It's time to face real life!");
+    console.log("You died.");
 
 }
