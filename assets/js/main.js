@@ -379,7 +379,7 @@ function main() {
 
             var rand = Math.floor( (Math.random() * 1000) + 1 );
 
-            if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) && m_player1.x > BOUND_LEFT)
+            if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) ||  && m_player1.x > BOUND_LEFT)
             {
                 if (rand <= 50 && m_player1.highness >= 400)
                 {
@@ -499,13 +499,14 @@ function main() {
         if(!paused){
             pause.setFrames(0,1,0);
             console.log("Nailed it");
-            game.add.sprite(MENU_KEY,0,0);
+            menu = game.add.sprite(0,0,MENU_KEY);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
             SCROLL_SPEED  = 0;
             m_player1.animations.stop("walk",true);
             dragon.animations.stop("fly",true);
         } else {
+            menu.destroy();
             pause.setFrames(1,0,1);
             paused = false;
             SCROLL_SPEED  = 2;
