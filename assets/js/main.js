@@ -257,7 +257,7 @@ function main() {
         // highness meter & score counter
         highnessMeter = new Phaser.Rectangle(0,0,m_player1.highness,10);
         scoreCounter = 0; // initial score
-        bmpText = game.add.bitmapText(300, 100, 'desyrel','Your score: ',20);
+        bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
     //  cropRect = {x : 0, y : 0 , width : 400, height : 10};
     //   game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
