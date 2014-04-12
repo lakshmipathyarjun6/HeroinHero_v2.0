@@ -332,6 +332,7 @@ function main() {
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
 
+
             // refresh scoreCounter display
             bmpText.setText('Your score: ' + scoreCounter);
 
