@@ -6,6 +6,7 @@ window.onload = function() {
 
     var player;
     var speed = 4;
+    var audioelement = document.createElement('audio');
 
     function preload(){
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
@@ -16,6 +17,7 @@ window.onload = function() {
         game.load.image("player2", 'assets/images/PlayerV2.png');
         game.load.atlasJSONHash('ginger','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
 
+	audioelement.setAttribute('src','assets/Game_Music.mp3');
     }
 
     function create () {
@@ -29,8 +31,9 @@ window.onload = function() {
         player.scale.x = .2;
         player.scale.y = .2;
         player.animations.add('walk');
-        player.animations.play('walk',5,true);
-
+        player.animations.play('walk',10,true);
+	audioelement.play();
+	audioelement.loop = true;
     }
 
     function update(){
