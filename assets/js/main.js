@@ -311,70 +311,19 @@ function main() {
                 dragon.y -= speed/2;
             }
         }  
-
-        /////////////////////////////
-        // Dragon Dance
-        ////////////////////////////
-
-
-        if (DRAGON_LEFT == 1)
-        {
-            if (dragon.x <= 10)
-            {
-            DRAGON_LEFT = 0;
-            }
-            else
-            {
-                dragon.x -= speed/2;
-            }
-        }
-        else
-        {
-            if (dragon.x >= 80)
-            {
-            DRAGON_LEFT = 1;
-            }
-            else
-            {
-                dragon.x += speed/2;
-            }
-        }
-        if (DRAGON_DOWN == 1)
-        {
-            if (dragon.y >= 350)
-            {
-            DRAGON_DOWN = 0;
-            }
-            else
-            {
-                dragon.y += speed/2;
-            }
-        }
-        else
-        {
-            if (dragon.y <= 90)
-            {
-            DRAGON_DOWN = 1;
-            }
-            else
-            {
-                dragon.y -= speed/2;
-            }
-        }  
-
         /////////////////////////////
         // Get user input
         /////////////////////////////
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) && m_player1.x > BOUND_LEFT)
+        if ((game.input.keyboard.isDown(Phaser.Keyboard.LEFT)||game.input.keyboard.isDown(Phaser.Keyboard.A)) && m_player1.x > BOUND_LEFT)
         {
             m_player1.x -= speed;
         } 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && m_player1.x < BOUND_RIGHT)
+        if ((game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) || game.input.keyboard.isDown(Phaser.Keyboard.D))&& m_player1.x < BOUND_RIGHT)
         {
             m_player1.x += speed;
         }
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && m_player1.y > BOUND_TOP)
+        if ((game.input.keyboard.isDown(Phaser.Keyboard.UP) || game.input.keyboard.isDown(Phaser.Keyboard.W)) && m_player1.y > BOUND_TOP)
         {
             if(m_player1.x > BOUND_LEFT)
             {
@@ -382,7 +331,7 @@ function main() {
             } 
             m_player1.y -= speed;
         }
-        if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN) && m_player1.y < BOUND_BOTTOM)
+        if ((game.input.keyboard.isDown(Phaser.Keyboard.DOWN) || game.input.keyboard.isDown(Phaser.Keyboard.S)) && m_player1.y < BOUND_BOTTOM)
         {
             if(m_player1.x < BOUND_RIGHT)
             {
