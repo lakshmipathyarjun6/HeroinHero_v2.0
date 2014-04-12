@@ -14,7 +14,10 @@ var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
 var CANVAS_X_MAX = 920;
 var CANVAS_X_MIN = 0;
-
+var BOUND_BOTTOM = 0;
+var BOUND_TOP = 0;
+var BOUND_LEFT = 0;
+var BOUND_RIGHT = 0;
 var DRAGON_LEFT = 0;
 var DRAGON_DOWN = 0;
 
@@ -157,6 +160,11 @@ function main() {
     var dragon_speed = 4;
     var player_speed = 4;
     var audioelement = document.createElement('audio');
+    BOUND_BOTTOM = game.height-100;
+    BOUND_TOP = 200;
+    BOUND_RIGHT = game.width-100;
+    BOUND_LEFT = 300;
+    
 
 
     // List of Actors
@@ -210,6 +218,8 @@ function main() {
 
 
     function update() {
+  //      m_actorsList.push(new HeroinPickup(game, 2,1) );
+        //console.log(m_actorsList.length );
 
         var numPickups = m_actorsList.length;
 
@@ -259,7 +269,7 @@ function main() {
         {
             if (dragon.x <= 10)
             {
-            DRAGON_LEFT = 0;
+                DRAGON_LEFT = 0;
             }
             else
             {
@@ -270,7 +280,7 @@ function main() {
         {
             if (dragon.x >= 80)
             {
-            DRAGON_LEFT = 1;
+                DRAGON_LEFT = 1;
             }
             else
             {
@@ -281,7 +291,7 @@ function main() {
         {
             if (dragon.y >= 350)
             {
-            DRAGON_DOWN = 0;
+                DRAGON_DOWN = 0;
             }
             else
             {
@@ -292,7 +302,7 @@ function main() {
         {
             if (dragon.y <= 90)
             {
-            DRAGON_DOWN = 1;
+                DRAGON_DOWN = 1;
             }
             else
             {
@@ -300,32 +310,68 @@ function main() {
             }
         }  
 
+	var rand = Math.floor( (Math.random()*1000)+1 ); 
+	
         /////////////////////////////
         // Get user input
         /////////////////////////////
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) && m_player1.x > BOUND_LEFT)
         {
-            m_player1.x -= player_speed;
+	    if(rand <= 50 && m_player1.highness >= 400)
+	    {
+		m_player1.x += player_speed;
+	    }
+	    else
+	    { 
+                m_player1.x -= player_speed;
+            }
         }
-        if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+        if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && m_player1.x < BOUND_RIGHT)
         {
-            m_player1.x += player_speed;
+	    if(rand <= 50 && m_player1.highness >= 400)
+	    {
+		m_player1.x -= player_speed;
+	    }
+	    else
+	    { 
+                m_player1.x += player_speed;
+            }
         }
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && m_player1.y > BOUND_TOP)
         {
-            m_player1.y -= player_speed;
-            m_player1.x -= player_speed/3;
+            if(m_player1.x > BOUND_LEFT)
+            {
+                m_player1.x -= player_speed/3;
+            }
+	    if(rand <= 50 && m_player1.highness >= 400)
+	    {
+		m_player1.y += player_speed;
+	    }
+	    else
+	    { 
+                m_player1.y -= player_speed;
+            }
         }
-        if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+        if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN) && m_player1.y < BOUND_BOTTOM)
         {
-            m_player1.y += player_speed;
-            m_player1.x += player_speed/3;
+	    if(m_player1.x < BOUND_RIGHT)
+            {
+                m_player1.x += player_speed/3;
+            }
+	    if(rand <= 50 && m_player1.highness >= 400)
+	    {
+		m_player1.y -= player_speed;
+	    }
+	    else
+	    { 
+                m_player1.y += player_speed;
+            }
         }
 
         if(player_speed > 0)
         {
-	    player_speed -= 0.00001;
+	    player_speed -= 0.0005;
         }
 
         /////////////////////////////
