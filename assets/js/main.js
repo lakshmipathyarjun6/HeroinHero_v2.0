@@ -1,12 +1,15 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.3;
+var HIGHNESS_DECR_VAL = 0.1;
 
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
+var ALCOHOL_KEY = 'alcohol';
+var WEED_KEY = 'alcohol';
+var LSD_KEY = 'alcohol';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var SCROLL_SPEED = 2;
@@ -21,26 +24,14 @@ var BOUND_RIGHT = 0;
 var DRAGON_LEFT = 0;
 var DRAGON_DOWN = 0;
 
+
+// DEBUG
+// override key values
+
 window.onload = main()
-
-//function include(filename)
-//{
-//    var head = document.getElementsByTagName('head')[0];
-//
-//    var script = document.createElement('script');
-//    script.src = filename;
-//    script.type = 'text/javascript';
-//
-//    head.appendChild(script)
-//}
-//
-//include("assets/js/actor.js");
-
-
-
-
-
-
+ALCOHOL_KEY = PLAYER2_KEY;
+WEED_KEY = PLAYER2_KEY;
+LSD_KEY = PLAYER2_KEY;
 
 
 
@@ -121,12 +112,48 @@ Pickup.prototype.constructor = Pickup;
 
 
 ///////////////////////////////////
+// LSD class
+///////////////////////////////////
+
+LSDPickup = function (game, x, y)
+{
+    Pickup.call(this, game, x, y, LSD_KEY, 40);
+}
+
+LSDPickup.prototype = Object.create(Pickup.prototype);
+LSDPickup.prototype.constructor = LSDPickup;
+
+///////////////////////////////////
+// Weed class
+///////////////////////////////////
+
+WeedPickup = function (game, x, y)
+{
+    Pickup.call(this, game, x, y, WEED_KEY, 10);
+}
+
+WeedPickup.prototype = Object.create(Pickup.prototype);
+WeedPickup.prototype.constructor = WeedPickup;
+
+///////////////////////////////////
+// Alcohol class
+///////////////////////////////////
+
+AlcoholPickup = function (game, x, y)
+{
+    Pickup.call(this, game, x, y, ALCOHOL_KEY, 20);
+}
+
+AlcoholPickup.prototype = Object.create(Pickup.prototype);
+AlcoholPickup.prototype.constructor = AlcoholPickup;
+
+///////////////////////////////////
 // Heroin class
 ///////////////////////////////////
 
 HeroinPickup = function (game, x, y)
 {
-    Pickup.call(this, game, x, y, HEROIN_KEY, 40);
+    Pickup.call(this, game, x, y, HEROIN_KEY, 50);
 }
 
 HeroinPickup.prototype = Object.create(Pickup.prototype);
@@ -344,17 +371,32 @@ function main() {
         // Randomly create a pickup
         /////////////////////////////
 
-        var randInt = Math.floor( (Math.random()*1000)+1 ); // between 1 & 10
+        var randInt = Math.floor( (Math.random()*10000)); // between 
 
-        if (randInt < 10)
+        // Let's make some drugs
+        if (randInt < 20)
         {
-            // Let's make some drugs
+            // Heroin!!!
             m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
         }
-        else if (randInt >= 10 && randInt < 20)
+        else if (randInt >= 20 && randInt < 40)
+        {
+            // Alcohol
+            m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
+        }
+        else if (randInt >= 40 && randInt < 50)
+        {
+            // Jimi Hendrix
+            m_actorsList.push(new LSDPickup(game, dragon.x+100, dragon.y+100));
+        }
+        else if (randInt >= 50 && randInt < 70)
+        {
+            // Weed
+            m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
+        }
+        else if (randInt >= 70 && randInt < 80)
         {
             // Bad pickup
-            // change this to the bad pickup
             m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
         }
 
