@@ -1,7 +1,7 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.1;
+var HIGHNESS_DECR_VAL = 0.5;
 
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
@@ -12,6 +12,7 @@ var WEED_KEY = 'alcohol';
 var LSD_KEY = 'alcohol';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
+var DEATH_KEY = 'death';
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -25,6 +26,8 @@ var DRAGON_LEFT = 0;
 var DRAGON_DOWN = 0;
 var PAUSE_BUTTON = 'pause';
 var MUTE_BUTTON = 'mute';
+var RETRY_BUTTON = 'retry';
+var QUIT_BUTTON = 'quit';
 var MUTE_STATE = 0;
 var paused = false;
 var muted = false;
@@ -211,11 +214,16 @@ function main()
         game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
         game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
+	game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
+	game.load.atlasJSONHash(RETRY_BUTTON,'assets/sprites/retrybuttonspriteatlas.png','assets/sprites/retrybutton.json');
+	game.load.atlasJSONHash(QUIT_BUTTON,'assets/sprites/quitbuttonspriteatlas.png','assets/sprites/quitbutton.json');
+
+
     //  audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
 
         // add text for score display
@@ -279,11 +287,11 @@ function main()
         {
 
             // check player's death
-            if (! m_player1.isAlive)
+          /*  if (! m_player1.isAlive)
             {
                 // Oh no!
                 endOfGame(scoreCounter);
-            }
+            }*/
 
 
             var numPickups = m_actorsList.length;
@@ -326,11 +334,11 @@ function main()
                 m_player1.isAlive = false;
 
             // check player's death again, just in case
-            if (! m_player1.isAlive)
+           /* if (! m_player1.isAlive)
             {
                 // Oh no!
                 endOfGame(scoreCounter);
-            }
+            }*/
 
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
@@ -453,6 +461,7 @@ function main()
                 // Heroin!!!
                 m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
             }
+
             else if (randInt >= 20 && randInt < 40)
             {
                 // Alcohol
@@ -473,9 +482,50 @@ function main()
                 // Bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
+            if(player_speed > 0)
+            {
+                player_speed -= 0.0002;
+            }
 
-        }
+        /////////////////////////////
+        // Randomly create a pickup
+        /////////////////////////////
 
+            var randInt = Math.floor( (Math.random()*10000)); // between 
+
+        // Let's make some drugs
+            if (randInt < 20)
+            {
+                // Heroin!!!
+                m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
+            }
+            else if (randInt >= 20 && randInt < 40)
+            {
+            // Alcohol
+                m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
+            }
+            else if (randInt >= 40 && randInt < 50)
+            {
+            // Jimi Hendrix
+                m_actorsList.push(new LSDPickup(game, dragon.x+100, dragon.y+100));
+            }
+            else if (randInt >= 50 && randInt < 70)
+            {
+            // Weed
+                m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
+            }
+            else if (randInt >= 70 && randInt < 80)
+            {
+            // Bad pickup
+                m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
+            }
+
+            if (m_player1.highness <= 0)
+	    {
+	        revealDeathScreen();
+	    }
+
+        } // I hope this curly brace goes here
     }
 
     function collisionHandler(p, pkup) {
@@ -486,6 +536,10 @@ function main()
         {
             m_player1.highness = MAX_HIGHNESS;
         }
+	if (m_player1.highness <= 0)
+	{
+	    revealDeathScreen();
+	}
     }
 
     function render() {
@@ -526,14 +580,38 @@ function main()
         }
     }
 
+    function revealDeathScreen()
+    {
+	paused = true;
+	death = game.add.sprite(0,0,'death');
+	retry_button = game.add.button(game.world.centerX - 95, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
+    }
+    
+    function actionRetry()
+    {
+	for (var k=0; k < m_actorsList.length; k++)
+        {
+            m_actorsList[k].isAlive = false;
+        }
+	player_speed = 4;
+	dragon.x = 10;
+	dragon.y = 300;
+	m_player1.x = game.width-100;
+	m_player1.y = game.height/2;
+	m_player1.highness = STARTING_HIGHNESS;
+	scoreCounter = 0;
+	death.destroy();
+	retry_button.destroy();
+	paused = false;		
+    }
 };
 
 
-function endOfGame(endScore)
+/*function endOfGame(endScore)
 {
 
     // todo
     alert("It's time to face real life!");
     console.log("You died.");
 
-}
+}*/
