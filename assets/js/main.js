@@ -1,6 +1,7 @@
 // GLOBAL VALUES
-var STARTING_HEALTH = 100;
-var MAX_HEALTH = 800;
+var STARTING_HIGHNESS = 100;
+var SCROLL_SPEED = 2;
+var MAX_HIGHNESS = 800;
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
@@ -88,7 +89,7 @@ Actor.prototype.constructor = Actor;
 Player = function(game, x, y)
 {
     Actor.call(this, game, x, y, PLAYER_KEY);
-    this.health = STARTING_HEALTH;
+    this.highness = STARTING_HIGHNESS;
 }
 
 // correct the constructor pointer because it points to Person
@@ -111,14 +112,14 @@ Pickup.prototype = Object.create(Actor.prototype);
 Pickup.prototype.constructor = Pickup;
 //Pickup.prototype.harmPlayer(p, amount)
 //{
-//    //p.health -= amount; // bug
+//    //p.highness -= amount; // bug
 //}
 
 ///////////////////////////////////
 // Heroin class
 ///////////////////////////////////
 
-HeroinPickup = function (game, x, y, key)
+HeroinPickup = function (game, x, y)
 {
     Pickup.call(this, game, x, y, HEROIN_KEY, 50);
 }
@@ -183,16 +184,43 @@ function main() {
     //  audioelement.play();
     //  audioelement.loop = true;
 
+
     }
 
     m_actorsList = new Array(); // empty
 
 
     function update() {
-        m_actorsList.push(new HeroinPickup(game, 2,1) );
-        //console.log(m_actorsList.length );
 
-        floor.tilePosition.x += 2; //update floor tile pos
+        var numPickups = m_actorsList.length;
+
+        // Move the floor
+        floor.tilePosition.x += SCROLL_SPEED; //update floor tile pos
+
+        // Move each pickup
+        for (var k=0; k < numPickups; k++)
+        {
+            m_actorsList[k].x += SCROLL_SPEED; // go right
+            if (m_actorsList[k].x > CANVAS_X_MAX)
+            {
+                // he ran off the screen
+                m_actorsList[k].isAlive = false;
+            }
+        }
+
+        // Remove dead pickups
+        for (var k=0; k < m_actorsList.length; k++)
+        {
+            console.log(k);
+            if (! m_actorsList[k].isAlive)
+            {
+                // He's dead, Jim
+                m_actorsList.splice(k,1); // remove that one element
+            }
+
+        }
+
+
 
         game.physics.arcade.overlap(m_player1,heroin_syringe,collisionHandler); //bind collisionHandler to player
         high_level.width -= 0.3;
@@ -231,15 +259,13 @@ function main() {
         if (randInt < 10)
         {
             // heroin
-            console.log("I'm making heroin!");
-            m_actorsList.push(game.add.sprite(100,100,HEROIN_KEY) );
+            m_actorsList.push(new HeroinPickup(game, 100,100) );
         }
         else if (randInt >= 10 && randInt < 20)
         {
             // Bad pickup
-            console.log("Fuck you!");
             // change this to the bad pickup
-            m_actorsList.push(game.add.sprite(100,300,HEROIN_KEY) );
+            m_actorsList.push(new HeroinPickup(game, 500,100) );
         }
 
             
