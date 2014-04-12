@@ -142,6 +142,7 @@ function main() {
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
     var speed = 4;
+    var floorSpeed = 2;
     var audioelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
     BOUND_TOP = 200;
@@ -201,7 +202,7 @@ function main() {
         m_actorsList.push(new HeroinPickup(game, 2,1) );
         //console.log(m_actorsList.length );
 
-        floor.tilePosition.x += 2; //update floor tile pos
+        floor.tilePosition.x += floorSpeed; //update floor tile pos
 
         game.physics.arcade.overlap(m_player1,heroin_syringe,collisionHandler); //bind collisionHandler to player
         high_level.width -= 0.3;
@@ -224,6 +225,8 @@ function main() {
             if(m_player1.x > BOUND_LEFT)
             {
                 m_player1.x -= speed/3;
+            } else {
+                floorSpeed = 3;
             }
             m_player1.y -= speed;
         }
