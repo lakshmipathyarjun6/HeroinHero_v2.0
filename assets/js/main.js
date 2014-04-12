@@ -98,6 +98,23 @@ Player.prototype.constructor = Player;
 
 // perhaps walk method when I can implement it
 
+
+///////////////////////////////////
+// Dragon class
+///////////////////////////////////
+
+Dragon = function(game, x, y)
+{
+    Actor.call(this, game, x, y, DRAGON_KEY);
+}
+
+// correct the constructor pointer because it points to Person
+Dragon.prototype = Object.create(Actor.prototype);
+Dragon.prototype.constructor = Dragon;
+
+// perhaps walk method when I can implement it
+
+
 ///////////////////////////////////
 // Pickup class -- virtual
 ///////////////////////////////////
@@ -149,27 +166,26 @@ function main() {
     function preload(){
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
-        
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
-        game.load.image(DRAGON_KEY, 'assets/images/other/dino.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
-
-    //audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
+	game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
+    //  audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
     }
 
     function create () {
-
         //setup floor
         floor = game.add.tileSprite(0,game.height/2, game.width,game.height/2,'floor');
 
         heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
         game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
         heroin_syringe.body.immovable = true;
-        dino = game.add.sprite(500,300,DRAGON_KEY);
-        dino.scale.y = .08;
-        dino.scale.x = .08;
+	dragon = game.add.sprite(500,300,DRAGON_KEY);
+        dragon.scale.y = .3;
+        dragon.scale.x = .3;
+	dragon.animations.add('fly');
+	dragon.animations.play('fly',10,true);
         player2 = game.add.sprite(100,300,PLAYER2_KEY);
         m_player1 = game.add.sprite(game.width-100,game.height/2,PLAYER_KEY);
         game.physics.enable(m_player1,Phaser.Physics.ARCADE);
@@ -183,6 +199,8 @@ function main() {
     //   game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
     //  audioelement.play();
     //  audioelement.loop = true;
+
+
 
 
     }
@@ -233,20 +251,26 @@ function main() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             m_player1.x -= speed;
+	    dragon.x -= speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             m_player1.x += speed;
+	    dragon.x += speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
             m_player1.y -= speed;
+	    dragon.y -= speed;
             m_player1.x -= speed/3;
+	    dragon.x -= speed/3;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
             m_player1.y += speed;
+	    dragon.y += speed;
             m_player1.x += speed/3;
+	    dragon.x += speed/3;
         }
 
         /////////////////////////////
