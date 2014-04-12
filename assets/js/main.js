@@ -1,7 +1,7 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.3;
+var HIGHNESS_DECR_VAL = 0.1;
 
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
@@ -371,7 +371,7 @@ function main() {
 
         if(player_speed > 0)
         {
-	    player_speed -= 0.0005;
+	    player_speed -= 0.0002;
         }
 
         /////////////////////////////
@@ -399,6 +399,10 @@ function main() {
     function collisionHandler(p, pkup) {
         pkup.isAlive = false; // kill him
         m_player1.highness += pkup.strength;
+	if (m_player1.highness > MAX_HIGHNESS)
+	{
+		m_player1.highness = MAX_HIGHNESS;
+	}
     }
 
     function render() {
