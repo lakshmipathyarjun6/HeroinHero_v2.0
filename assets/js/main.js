@@ -16,7 +16,7 @@ window.onload = function() {
         game.load.image("player2", 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash('ginger','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
 
-	audioelement.setAttribute('src','assets/Game_Music.mp3');
+	audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
     }
 
     function create () {
