@@ -1,12 +1,15 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.3;
+var HIGHNESS_DECR_VAL = 0.1;
 
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
+var ALCOHOL_KEY = 'alcohol';
+var WEED_KEY = 'alcohol';
+var LSD_KEY = 'alcohol';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var SCROLL_SPEED = 2;
@@ -28,25 +31,14 @@ var muted = false;
 var DRAGON_FLY_RATE = 10;
 var PLAYER_WALK_RATE = 10;
 
+
+// DEBUG
+// override key values
+
 window.onload = main()
-//function include(filename)
-//{
-//    var head = document.getElementsByTagName('head')[0];
-//
-//    var script = document.createElement('script');
-//    script.src = filename;
-//    script.type = 'text/javascript';
-//
-//    head.appendChild(script)
-//}
-//
-//include("assets/js/actor.js");
-
-
-
-
-
-
+ALCOHOL_KEY = PLAYER2_KEY;
+WEED_KEY = PLAYER2_KEY;
+LSD_KEY = PLAYER2_KEY;
 
 
 
@@ -127,12 +119,48 @@ Pickup.prototype.constructor = Pickup;
 
 
 ///////////////////////////////////
+// LSD class
+///////////////////////////////////
+
+LSDPickup = function (game, x, y)
+{
+    Pickup.call(this, game, x, y, LSD_KEY, 40);
+}
+
+LSDPickup.prototype = Object.create(Pickup.prototype);
+LSDPickup.prototype.constructor = LSDPickup;
+
+///////////////////////////////////
+// Weed class
+///////////////////////////////////
+
+WeedPickup = function (game, x, y)
+{
+    Pickup.call(this, game, x, y, WEED_KEY, 10);
+}
+
+WeedPickup.prototype = Object.create(Pickup.prototype);
+WeedPickup.prototype.constructor = WeedPickup;
+
+///////////////////////////////////
+// Alcohol class
+///////////////////////////////////
+
+AlcoholPickup = function (game, x, y)
+{
+    Pickup.call(this, game, x, y, ALCOHOL_KEY, 20);
+}
+
+AlcoholPickup.prototype = Object.create(Pickup.prototype);
+AlcoholPickup.prototype.constructor = AlcoholPickup;
+
+///////////////////////////////////
 // Heroin class
 ///////////////////////////////////
 
 HeroinPickup = function (game, x, y)
 {
-    Pickup.call(this, game, x, y, HEROIN_KEY, 40);
+    Pickup.call(this, game, x, y, HEROIN_KEY, 50);
 }
 
 HeroinPickup.prototype = Object.create(Pickup.prototype);
@@ -160,17 +188,16 @@ WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 function main() {
 
 
-    // declare game object as global // or not
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
-    var speed = 4;
-    //var floorSpeed = 2;
+    var dragon_speed = 4;
+    var player_speed = 4;
     var audioelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
     BOUND_TOP = 200;
     BOUND_RIGHT = game.width-100;
     BOUND_LEFT = 300;
-    
+
 
 
     // List of Actors
@@ -189,7 +216,12 @@ function main() {
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
     //  audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
+
+        // add text for score display
+        game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml');
     }
+
+    var bmpText;
 
     function create () {
         //setup floor
@@ -212,6 +244,7 @@ function main() {
         dragon.animations.play('fly',DRAGON_FLY_RATE,true);
 
 
+        // set up m_player1
         m_player1 = new Player (game, game.width-100,game.height/2, PLAYER_KEY);
         //m_player1.body.velocity.x=-100;
         m_player1.scale.x = .2;
@@ -221,7 +254,11 @@ function main() {
 
         //m_player2 = new Player (game, game.width-300,game.height/2+100, PLAYER2_KEY);
 
+        // highness meter & score counter
         highnessMeter = new Phaser.Rectangle(0,0,m_player1.highness,10);
+        scoreCounter = 0; // initial score
+        bmpText = game.add.bitmapText(300, 100, 'desyrel','Your score: ',20);
+
     //  cropRect = {x : 0, y : 0 , width : 400, height : 10};
     //   game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
     //  audioelement.play();
@@ -236,9 +273,8 @@ function main() {
 
 
     function update() {
-  //      m_actorsList.push(new HeroinPickup(game, 2,1) );
-        //console.log(m_actorsList.length );
-        if(!paused){
+        //m_actorsList.push(new HeroinPickup(game, 2,1) );
+        if(!paused) {
 
             var numPickups = m_actorsList.length;
 
@@ -280,6 +316,10 @@ function main() {
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
 
+            // refresh scoreCounter display
+            bmpText.setText('Your score: ' + scoreCounter);
+
+
             /////////////////////////////
             // Move the Dragon
             /////////////////////////////
@@ -287,46 +327,30 @@ function main() {
             if (DRAGON_LEFT == 1)
             {
                 if (dragon.x <= 10)
-                {
-                DRAGON_LEFT = 0;
-                }
+                    DRAGON_LEFT = 0;
                 else
-                {
-                    dragon.x -= speed/2;
-                }
+                    dragon.x -= dragon_speed/2;
             }
             else
             {
                 if (dragon.x >= 80)
-                {
-                DRAGON_LEFT = 1;
-                }
+                    DRAGON_LEFT = 1;
                 else
-                {
-                    dragon.x += speed/2;
-                }
+                    dragon.x += dragon_speed/2;
             }
             if (DRAGON_DOWN == 1)
             {
                 if (dragon.y >= 350)
-                {
-                DRAGON_DOWN = 0;
-                }
+                    DRAGON_DOWN = 0;
                 else
-                {
-                    dragon.y += speed/2;
-                }
+                    dragon.y += dragon_speed/2;
             }
             else
             {
                 if (dragon.y <= 90)
-                {
-                DRAGON_DOWN = 1;
-                }
+                    DRAGON_DOWN = 1;
                 else
-                {
-                    dragon.y -= speed/2;
-                }
+                    dragon.y -= dragon_speed/2;
             }  
 
 
@@ -334,64 +358,121 @@ function main() {
             // Get user input
             /////////////////////////////
 
+            var rand = Math.floor( (Math.random() * 1000) + 1 );
+
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) && m_player1.x > BOUND_LEFT)
             {
-                m_player1.x -= speed;
+                if (rand <= 50 && m_player1.highness >= 400)
+                {
+                    m_player1.x += player_speed;
+                }
+                else
+                {
+                    m_player1.x -= player_speed;
+                }
             } 
+
             if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && m_player1.x < BOUND_RIGHT)
             {
-                m_player1.x += speed;
+                if (rand <= 50 && m_player1.highness >= 400)
+                {
+                    m_player1.x -= player_speed;
+                }
+                else
+                { 
+                    m_player1.x += player_speed;
+                }
             }
+
             if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && m_player1.y > BOUND_TOP)
             {
                 if(m_player1.x > BOUND_LEFT)
                 {
-                    m_player1.x -= speed/3;
-                } 
-                m_player1.y -= speed;
+                    m_player1.x -= player_speed/3;
+                }
+                if(rand <= 50 && m_player1.highness >= 400)
+                {
+                    m_player1.y += player_speed;
+                }
+                else
+                { 
+                    m_player1.y -= player_speed;
+                }
             }
             if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN) && m_player1.y < BOUND_BOTTOM)
             {
                 if(m_player1.x < BOUND_RIGHT)
                 {
-                    m_player1.x += speed/3;
+                    m_player1.x += player_speed/3;
                 }
-                m_player1.y += speed;
+                if(rand <= 50 && m_player1.highness >= 400)
+                {
+                    m_player1.y -= player_speed;
+                }
+                else
+                { 
+                    m_player1.y += player_speed;
+                }
             }
+
+            if (player_speed > 0)
+            {
+                player_speed -= 0.0002;
+            }
+
 
             /////////////////////////////
             // Randomly create a pickup
             /////////////////////////////
 
-            var randInt = Math.floor( (Math.random()*1000)+1 ); // between 1 & 10
+            var randInt = Math.floor( (Math.random()*10000)); // between 
 
-            if (randInt < 10)
+            // Let's make some drugs
+            if (randInt < 20)
             {
-                // Let's make some drugs
+                // Heroin!!!
                 m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
             }
-            else if (randInt >= 10 && randInt < 20)
+            else if (randInt >= 20 && randInt < 40)
+            {
+                // Alcohol
+                m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
+            }
+            else if (randInt >= 40 && randInt < 50)
+            {
+                // Jimi Hendrix
+                m_actorsList.push(new LSDPickup(game, dragon.x+100, dragon.y+100));
+            }
+            else if (randInt >= 50 && randInt < 70)
+            {
+                // Weed
+                m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
+            }
+            else if (randInt >= 70 && randInt < 80)
             {
                 // Bad pickup
-                // change this to the bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
-        }
 
-            
+        } // I hope this curly brace goes here
 
     }
 
     function collisionHandler(p, pkup) {
         pkup.isAlive = false; // kill him
         m_player1.highness += pkup.strength;
+        scoreCounter += pkup.strength;
+        if (m_player1.highness > MAX_HIGHNESS)
+        {
+            m_player1.highness = MAX_HIGHNESS;
+        }
     }
 
     function render() {
         game.debug.geom(highnessMeter,'#ff0000');
         //game.debug.body(m_player1);
         //game.debug.body(heroin_syringe);
-	//bucket = new WaterBucketPickup(game,100,100);
+        //bucket = new WaterBucketPickup(game,100,100);
         //game.debug.body();
     }
 
