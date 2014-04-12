@@ -275,6 +275,13 @@ function main() {
     function update() {
         //m_actorsList.push(new HeroinPickup(game, 2,1) );
         if(!paused) {
+            // check player's death
+            if (! m_player1.isAlive)
+            {
+                // Oh no!
+                endOfGame(scoreCounter);
+            }
+
 
             var numPickups = m_actorsList.length;
 
@@ -310,9 +317,18 @@ function main() {
 
             }
 
-
             // update highness
             m_player1.highness -= HIGHNESS_DECR_VAL;
+            if (m_player1.highness <= 0)
+                m_player1.isAlive = false;
+
+            // check player's death again, just in case
+            if (! m_player1.isAlive)
+            {
+                // Oh no!
+                endOfGame(scoreCounter);
+            }
+
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
 
@@ -509,3 +525,10 @@ function main() {
 };
 
 
+function endOfGame(endScore)
+{
+
+    // todo
+    alert("It's time to face real life!");
+
+}
