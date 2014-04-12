@@ -2,7 +2,7 @@
 window.onload = function() {
 
 
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update });
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
     var speed = 4;
     var audioelement = document.createElement('audio');
@@ -11,6 +11,7 @@ window.onload = function() {
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
         
+        game.load.image("floor", 'assets/images/floor/floor.jpeg');
         game.load.image("heroin_syringe", 'assets/images/heroin/heroinsyringe.png');
         game.load.image("dino", 'assets/images/other/dino.png');
         game.load.image("player2", 'assets/images/playerV2/PlayerV2.png');
@@ -20,6 +21,9 @@ window.onload = function() {
     }
 
     function create () {
+
+        //setup floor
+        floor = 
 
         heroin_syringe = game.add.sprite(500,100,'heroin_syringe');
         game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
