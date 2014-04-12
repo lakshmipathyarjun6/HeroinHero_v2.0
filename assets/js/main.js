@@ -187,6 +187,8 @@ WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 
 function main()
 {
+    msgCounter = 0;
+    msgWait = 0;
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
@@ -223,6 +225,7 @@ function main()
     }
 
     var bmpText;
+    var msgText;
 
     function create ()
     {
@@ -473,6 +476,47 @@ function main()
                 // Bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
+
+            /////////////////////////////
+            // Write a message
+            /////////////////////////////
+            // decrement counter if necessary
+            if (msgCounter > 1) // show the message a little longer
+                msgCounter--;
+            else if (msgCounter == 1) // time to delete the message
+            {
+                // clear the message
+                msgText.destroy();
+                msgCounter--;
+                msgWait = 3000;
+            }
+            else if (msgWait == 0)// time for a new message
+            {
+                var displayVal = Math.floor( Math.random() * 500 );
+                switch(displayVal)
+                {
+                  case 0:
+                    msgText = game.add.bitmapText(game.width/2-200, 100, 'desyrel',"Don't let your highness meter take a hit!",20);
+                    msgCounter = 500;
+                    break;
+                  case 1:
+                    msgText = game.add.bitmapText(game.width/2-60, 100, 'desyrel',"Hey, man!",20);
+                    msgCounter = 500;
+                    break;
+                  // more cases?
+
+
+                  default:
+                    // nothing
+                }
+            }
+            else
+            {
+                // not showing a message, but must still wait to show one
+                msgWait--;
+            }
+
+
 
         }
 
