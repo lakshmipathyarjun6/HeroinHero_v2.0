@@ -12,9 +12,10 @@ window.onload = function() {
         game.stage.backgroundColor = '#ffffff';
         
         game.load.image("heroin_syringe", 'assets/images/heroin/heroinsyringe.png');
-        game.load.image("dino", 'assets/images/other/dino.png');
+        game.load.image("dragon", 'assets/images/Dragon/Dragon.png');
         game.load.image("player2", 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash('ginger','assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
+	game.load.atlasJSONHash('dragon','assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
 
 //	audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
     }
@@ -24,11 +25,13 @@ window.onload = function() {
         heroin_syringe = game.add.sprite(500,100,'heroin_syringe');
 	game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
 	heroin_syringe.body.immovable = true;
-        dino = game.add.sprite(500,300,'dino');
-        dino.scale.y = .08;
-        dino.scale.x = .08;
+        dragon = game.add.sprite(500,300,'dragon');
+        dragon.scale.y = .3;
+        dragon.scale.x = .3;
+	dragon.animations.add('fly');
+	dragon.animations.play('fly',10,true);
         player2 = game.add.sprite(100,300,'player2');
-        player = game.add.sprite(700,100,'ginger');
+        player = game.add.sprite(700,300,'ginger');
 	game.physics.enable(player,Phaser.Physics.ARCADE);
 //	player.body.velocity.x=-100;
         player.scale.x = .2;
@@ -52,20 +55,26 @@ window.onload = function() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             player.x -= speed;
+	    dragon.x -= speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             player.x += speed;
+	    dragon.x += speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
             player.y -= speed;
+	    dragon.y -= speed;
             player.x -= speed/3;
+	    dragon.x -= speed/3;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
             player.y += speed;
+	    dragon.y += speed;
             player.x += speed/3;
+	    dragon.x += speed/3;
         }
     }
 

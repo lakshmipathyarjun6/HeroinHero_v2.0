@@ -1,0 +1,44 @@
+{"frames": {
+
+"Dragon.png":
+{
+	"frame": {"x":0,"y":0,"w":640,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":480},
+	"sourceSize": {"w":640,"h":480}
+},
+"Dragon2.png":
+{
+	"frame": {"x":640,"y":0,"w":640,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":480},
+	"sourceSize": {"w":640,"h":480}
+},
+"Dragon3.png":
+{
+	"frame": {"x":0,"y":480,"w":640,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":480},
+	"sourceSize": {"w":640,"h":480}
+},
+"Dragon4.png":
+{
+	"frame": {"x":640,"y":480,"w":640,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":480},
+	"sourceSize": {"w":640,"h":480}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "dragonspriteatlas.png",
+	"format": "RGBA8888",
+	"size": {"w":1280,"h":960},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f03734ae540c8808641aa97abfb5bf9c:40d5b8332a4ec3b057520fd9064d833d:b6bd7d7f22b926d906d357ec52f187a9$"
+}
+}
