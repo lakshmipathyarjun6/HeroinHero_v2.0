@@ -154,7 +154,8 @@ function main() {
     // declare game object as global // or not
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
-    var speed = 4;
+    var dragon_speed = 4;
+    var player_speed = 4;
     var audioelement = document.createElement('audio');
 
 
@@ -262,7 +263,7 @@ function main() {
             }
             else
             {
-                dragon.x -= speed/2;
+                dragon.x -= dragon_speed/2;
             }
         }
         else
@@ -273,7 +274,7 @@ function main() {
             }
             else
             {
-                dragon.x += speed/2;
+                dragon.x += dragon_speed/2;
             }
         }
         if (DRAGON_DOWN == 1)
@@ -284,7 +285,7 @@ function main() {
             }
             else
             {
-                dragon.y += speed/2;
+                dragon.y += dragon_speed/2;
             }
         }
         else
@@ -295,7 +296,7 @@ function main() {
             }
             else
             {
-                dragon.y -= speed/2;
+                dragon.y -= dragon_speed/2;
             }
         }  
 
@@ -305,21 +306,26 @@ function main() {
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            m_player1.x -= speed;
+            m_player1.x -= player_speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            m_player1.x += speed;
+            m_player1.x += player_speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            m_player1.y -= speed;
-            m_player1.x -= speed/3;
+            m_player1.y -= player_speed;
+            m_player1.x -= player_speed/3;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
-            m_player1.y += speed;
-            m_player1.x += speed/3;
+            m_player1.y += player_speed;
+            m_player1.x += player_speed/3;
+        }
+
+        if(player_speed > 0)
+        {
+	    player_speed -= 0.00001;
         }
 
         /////////////////////////////
