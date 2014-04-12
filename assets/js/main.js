@@ -10,7 +10,8 @@ var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
 var CANVAS_X_MAX = 920;
 var CANVAS_X_MIN = 0;
-
+var DRAGON_LEFT = 0;
+var DRAGON_DOWN = 0;
 
 window.onload = main()
 
@@ -180,7 +181,7 @@ function main() {
         heroin_syringe = game.add.sprite(500,100,HEROIN_KEY);
         game.physics.enable(heroin_syringe,Phaser.Physics.ARCADE);
         heroin_syringe.body.immovable = true;
-	dragon = game.add.sprite(500,300,DRAGON_KEY);
+	dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
         dragon.scale.x = .3;
 	dragon.animations.add('fly');
@@ -217,29 +218,73 @@ function main() {
         // Get user input
         /////////////////////////////
 
+	if (DRAGON_LEFT == 1)
+	{
+	    if (dragon.x <= 10)
+	    {
+		DRAGON_LEFT = 0;
+	    }
+	    else
+	    {
+	        dragon.x -= speed/2;
+	    }
+	}
+	else
+	{
+	    if (dragon.x >= 80)
+	    {
+		DRAGON_LEFT = 1;
+	    }
+	    else
+	    {
+	        dragon.x += speed/2;
+	    }
+	}
+	if (DRAGON_DOWN == 1)
+	{
+	    if (dragon.y >= 350)
+	    {
+		DRAGON_DOWN = 0;
+	    }
+	    else
+	    {
+	        dragon.y += speed/2;
+	    }
+	}
+	else
+	{
+	    if (dragon.y <= 90)
+	    {
+		DRAGON_DOWN = 1;
+	    }
+	    else
+	    {
+	        dragon.y -= speed/2;
+	    }
+	}  
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             m_player1.x -= speed;
-	    dragon.x -= speed;
+	    //dragon.x -= speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             m_player1.x += speed;
-	    dragon.x += speed;
+	    //dragon.x += speed;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
             m_player1.y -= speed;
-	    dragon.y -= speed;
+	    //dragon.y -= speed;
             m_player1.x -= speed/3;
-	    dragon.x -= speed/3;
+	    //dragon.x -= speed/3;
         }
         if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
             m_player1.y += speed;
-	    dragon.y += speed;
+	    //dragon.y += speed;
             m_player1.x += speed/3;
-	    dragon.x += speed/3;
+	    //dragon.x += speed/3;
         }
 
         /////////////////////////////
