@@ -147,7 +147,7 @@ function main() {
     BOUND_BOTTOM = game.height-100;
     BOUND_TOP = 200;
     BOUND_RIGHT = game.width-100;
-    BOUND_LEFT = 200;
+    BOUND_LEFT = 300;
     
 
 
