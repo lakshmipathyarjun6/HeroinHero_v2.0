@@ -194,6 +194,8 @@ WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 
 function main()
 {
+    msgCounter = 0;
+    msgWait = 3000;
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
@@ -232,13 +234,14 @@ function main()
         game.load.atlasJSONHash(QUIT_BUTTON,'assets/sprites/quitbuttonspriteatlas.png','assets/sprites/quitbutton.json');
 
 
-    //  audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
+        // audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
 
         // add text for score display
         game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml');
     }
 
     var bmpText;
+    var msgText;
 
     function create ()
     {
@@ -248,12 +251,12 @@ function main()
         //create pause button
         pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,1,0,1);
         pausekey = game.input.keyboard.addKey(Phaser.Keyboard.P);
-        pausekey.onDown.add(pauseOnClick, this); 
+        pausekey.onDown.add(pauseOnClick, this);
 
         //create mute button
         mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
         mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-        mutekey.onDown.add(muteOnClick, this); 
+        mutekey.onDown.add(muteOnClick, this);
 
         dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
@@ -277,14 +280,14 @@ function main()
         scoreCounter = 0; // initial score
         bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
-    //  cropRect = {x : 0, y : 0 , width : 400, height : 10};
-    //   game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-    //  audioelement.play();
-    //  audioelement.loop = true;
+        //cropRect = {x : 0, y : 0 , width : 400, height : 10};
+        // game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+        //audioelement.play();
+        //audioelement.loop = true;
 
         smenu2 = game.add.sprite(0,0,START_MENU_2);
         smenu1 = game.add.sprite(0,0,START_MENU_1);
-        
+
         //  Create our Timer
         timer = game.time.create(false);
 
@@ -296,15 +299,9 @@ function main()
         timer.start();
 
         smenu2.alhpa = 0;
-        
+
         game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
         paused = true;
-
-        //cropRect = {x : 0, y : 0 , width : 400, height : 10};
-        //game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-        //audioelement.play();
-        //audioelement.loop = true;
-
 
     }
 
@@ -318,11 +315,11 @@ function main()
         {
 
             // check player's death
-          /*  if (! m_player1.isAlive)
-            {
-                // Oh no!
-                endOfGame(scoreCounter);
-            }*/
+            //if (! m_player1.isAlive)
+            //{
+            //    // Oh no!
+            //    endOfGame(scoreCounter);
+            //}
 
 
             var numPickups = m_actorsList.length;
@@ -365,11 +362,11 @@ function main()
                 m_player1.isAlive = false;
 
             // check player's death again, just in case
-           /* if (! m_player1.isAlive)
-            {
-                // Oh no!
-                endOfGame(scoreCounter);
-            }*/
+            //if (! m_player1.isAlive)
+            //{
+            //    // Oh no!
+            //    endOfGame(scoreCounter);
+            //}
 
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
@@ -410,7 +407,7 @@ function main()
                     DRAGON_DOWN = 1;
                 else
                     dragon.y -= dragon_speed/2;
-            }  
+            }
 
 
             /////////////////////////////
@@ -429,7 +426,7 @@ function main()
                 {
                     m_player1.x -= player_speed;
                 }
-            } 
+            }
 
             if ((game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) || game.input.keyboard.isDown(Phaser.Keyboard.D))&& m_player1.x < BOUND_RIGHT)
             {
@@ -438,7 +435,7 @@ function main()
                     m_player1.x -= player_speed;
                 }
                 else
-                { 
+                {
                     m_player1.x += player_speed;
                 }
             }
@@ -454,7 +451,7 @@ function main()
                     m_player1.y += player_speed;
                 }
                 else
-                { 
+                {
                     m_player1.y -= player_speed;
                 }
             }
@@ -469,7 +466,7 @@ function main()
                     m_player1.y -= player_speed;
                 }
                 else
-                { 
+                {
                     m_player1.y += player_speed;
                 }
             }
@@ -484,7 +481,10 @@ function main()
             // Randomly create a pickup
             /////////////////////////////
 
-            var randInt = Math.floor( (Math.random()*10000)); // between 
+            var randInt = Math.floor( (Math.random()*10000)); // between
+
+
+            
 
             // Let's make some drugs
             if (randInt < 20)
@@ -518,45 +518,68 @@ function main()
                 player_speed -= 0.0002;
             }
 
-        /////////////////////////////
-        // Randomly create a pickup
-        /////////////////////////////
+            /////////////////////////////
+            // Write a message
+            /////////////////////////////
+            // decrement counter if necessary
+            if (msgCounter > 1) // show the message a little longer
+                msgCounter--;
+            else if (msgCounter == 1) // time to delete the message
+            {
+                // clear the message
+                msgText.destroy();
+                msgCounter--;
+                msgWait = 3000;
+            }
+            else if (msgWait == 0)// time for a new message
+            {
+                var displayVal = Math.floor( Math.random() * 500 );
+                switch(displayVal)
+                {
+                  case 0:
+                  case 1:
+                    msgText = game.add.bitmapText(game.width/2-200, 100, 'desyrel',"Don't let your highness meter take a hit!",20);
+                    msgCounter = 500;
+                    break;
+                  case 2:
+                    msgText = game.add.bitmapText(game.width/2-60, 100, 'desyrel',"Hey, man!",20);
+                    msgCounter = 500;
+                    break;
+                  case 3:
+                    msgText = game.add.bitmapText(game.width/2-120, 100, 'desyrel',"Respect my authority!",20);
+                    msgCounter = 500;
+                    break;
+                  case 4:
+                    msgText = game.add.bitmapText(game.width/2-110, 100, 'desyrel','"Catch me! Come on!"',20);
+                    msgCounter = 500;
+                    break;
+                  case 5:
+                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Ease the stress a bit...",20);
+                    msgCounter = 500;
+                    break;
+                  // more cases?
 
-            var randInt = Math.floor( (Math.random()*10000)); // between 
 
-        // Let's make some drugs
-            if (randInt < 20)
-            {
-                // Heroin!!!
-                m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
+                  default:
+                    // nothing
+                }
             }
-            else if (randInt >= 20 && randInt < 40)
+            else
             {
-            // Alcohol
-                m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
+                // not showing a message, but must still wait to show one
+                msgWait--;
             }
-            else if (randInt >= 40 && randInt < 50)
-            {
-            // Jimi Hendrix
-                m_actorsList.push(new LSDPickup(game, dragon.x+100, dragon.y+100));
-            }
-            else if (randInt >= 50 && randInt < 70)
-            {
-            // Weed
-                m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
-            }
-            else if (randInt >= 70 && randInt < 80)
-            {
-            // Bad pickup
-                m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
-            }
+
+
+
+
 
             if (m_player1.highness <= 0)
-	    {
-	        revealDeathScreen();
-	    }
+            {
+                revealDeathScreen();
+            }
 
-        } // I hope this curly brace goes here
+        }
     }
 
     function collisionHandler(p, pkup) {
@@ -567,10 +590,10 @@ function main()
         {
             m_player1.highness = MAX_HIGHNESS;
         }
-	if (m_player1.highness <= 0)
-	{
-	    revealDeathScreen();
-	}
+        if (m_player1.highness <= 0)
+        {
+            revealDeathScreen();
+        }
     }
 
     function render() {
@@ -582,9 +605,9 @@ function main()
     }
 
     function pauseOnClick() {
-        if(!paused){
+        if(!paused) {
             pause.setFrames(0,1,0);
-            console.log("Nailed it");
+            //console.log("Nailed it");
             menu = game.add.sprite(0,0,MENU_KEY);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
@@ -604,19 +627,23 @@ function main()
     function muteOnClick() {
         if(!muted){
             mute.setFrames(0,1,0);
-            console.log("Mute");
+            //console.log("Mute");
             muted = true;
         } else {
-            console.log("Unmute");
+            //console.log("Unmute");
             mute.setFrames(1,0,1);
             muted = false;
         }
     }
 
     function randomizeBG() {
+        if (!paused)
+        {
             game.stage.backgroundColor = getRandomColor();
+            // todo: make this only for not-paused state
+        }
     }
-            
+
     function getRandomColor() {
         var letters = '0123456789ABCDEF'.split('');
         var color = '#';
@@ -638,15 +665,16 @@ function main()
         }
 
         //  When the cross-fade is complete we swap the image being shown by the now hidden picture
-//        tween.onComplete.add(changePicture, this);
+        //tween.onComplete.add(changePicture, this);
         game.time.events.add(Phaser.Timer.SECOND * 8,start, this);
 
     }
-    
+
     function start() {
             game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
             paused = false;
     }
+
     function revealDeathScreen()
     {
         paused = true;
@@ -654,7 +682,7 @@ function main()
         retry_button = game.add.button(game.world.centerX - 160, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
         quit_button = game.add.button(game.world.centerX + 40, 400, QUIT_BUTTON, actionQuit, this, 0, 0, 0);
     }
-    
+
     function actionRetry()
     {
         for (var k=0; k < m_actorsList.length; k++)
@@ -671,7 +699,7 @@ function main()
         death.destroy();
         retry_button.destroy();
         quit_button.destroy();
-        paused = false;		
+        paused = false;
     }
 
     function actionQuit()
@@ -687,15 +715,9 @@ function main()
 };
 
 
-/*function endOfGame(endScore)
-{
-
-    // todo
-<<<<<<< HEAD
-    //alert("It's time to face real life!");
-=======
-    alert("It's time to face real life!");
-    console.log("You died.");
->>>>>>> 2c15b322be6b4efb9c3635bec75b13692ad70399
-
-}*/
+//function endOfGame(endScore)
+//{
+//    alert("It's time to face real life!");
+//    console.log("You died.");
+//
+//}
