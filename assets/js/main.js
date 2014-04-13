@@ -187,6 +187,18 @@ WaterBucketPickup = function (game, x, y)
 WaterBucketPickup.prototype = Object.create(Pickup.prototype);
 WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 
+///////////////////////////////////
+// Roommate class
+///////////////////////////////////
+
+Roommate = function (game, x, y)
+{
+   Pickup.call(this, game, x, y, PLAYER2_KEY, -60);
+}
+
+Roommate.prototype = Object.create(Pickup.prototype);
+Roommate.prototype.constructor = Roommate;
+
 
 ///////////////////////////////////
 // Main function
@@ -521,6 +533,13 @@ function main()
                 // Bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
+            else if (randInt >= 80 && randInt < 90)
+            {
+                m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
+            }
+
+
+
             if(player_speed > 1)
             {
                 player_speed -= 0.0002;
