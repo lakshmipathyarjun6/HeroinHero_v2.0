@@ -268,6 +268,9 @@ function main()
 
     function create ()
     {
+        music = game.add.audio(AUDIO_KEY);
+        music.loop = true;
+        music.play();
         //setup floor
         floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
@@ -303,9 +306,6 @@ function main()
         scoreCounter = 0; // initial score
         bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
-        music = game.add.audio(AUDIO_KEY);
-        music.loop = true;
-        music.play();
 
         smenu2 = game.add.sprite(0,0,START_MENU_2);
         smenu1 = game.add.sprite(0,0,START_MENU_1);
@@ -707,9 +707,11 @@ function main()
 
     function start() {
             next.destroy();
+            smenu1.destroy();
             in_menu = false;
             game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
             paused = false;
+            smenu2.destroy();
     }
 
     function revealDeathScreen()
