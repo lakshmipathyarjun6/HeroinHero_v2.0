@@ -637,8 +637,11 @@ function main()
     }
 
     function randomizeBG() {
-        game.stage.backgroundColor = getRandomColor();
-        // todo: make this only for not-paused state
+        if (!paused)
+        {
+            game.stage.backgroundColor = getRandomColor();
+            // todo: make this only for not-paused state
+        }
     }
 
     function getRandomColor() {
