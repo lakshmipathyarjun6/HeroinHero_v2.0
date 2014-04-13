@@ -11,8 +11,8 @@ var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
 var ALCOHOL_KEY = 'alcohol';
-var WEED_KEY = 'alcohol';
-var LSD_KEY = 'alcohol';
+var WEED_KEY = 'weed';
+var LSD_KEY = 'acid';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
@@ -45,7 +45,7 @@ var PLAYER_WALK_RATE = 10;
 
 window.onload = main()
 ALCOHOL_KEY = PLAYER2_KEY;
-WEED_KEY = PLAYER2_KEY;
+//WEED_KEY = PLAYER2_KEY;
 LSD_KEY = PLAYER2_KEY;
 
 
@@ -195,6 +195,8 @@ WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 
 function main()
 {
+    msgCounter = 0;
+    msgWait = 3000;
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
@@ -217,6 +219,8 @@ function main()
 	    createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
+
+        // load images and spritesheets
         game.load.image(START_MENU_1, 'assets/images/menu/startMenu1.png');
         game.load.image(START_MENU_2, 'assets/images/menu/startMenu2.png');
         game.load.image(MENU_KEY, 'assets/images/menu/menu.png');
@@ -225,10 +229,13 @@ function main()
         game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
+
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
+        game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
+
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
         game.load.atlasJSONHash(RETRY_BUTTON,'assets/sprites/retrybuttonspriteatlas.png','assets/sprites/retrybutton.json');
@@ -242,6 +249,7 @@ function main()
     }
 
     var bmpText;
+    var msgText;
 
     function create ()
     {
@@ -482,6 +490,9 @@ function main()
 
             var randInt = Math.floor( (Math.random()*10000)); // between
 
+
+            
+
             // Let's make some drugs
             if (randInt < 20)
             {
@@ -513,6 +524,61 @@ function main()
             {
                 player_speed -= 0.0002;
             }
+
+            /////////////////////////////
+            // Write a message
+            /////////////////////////////
+            // decrement counter if necessary
+            if (msgCounter > 1) // show the message a little longer
+                msgCounter--;
+            else if (msgCounter == 1) // time to delete the message
+            {
+                // clear the message
+                msgText.destroy();
+                msgCounter--;
+                msgWait = 3000;
+            }
+            else if (msgWait == 0)// time for a new message
+            {
+                var displayVal = Math.floor( Math.random() * 500 );
+                switch(displayVal)
+                {
+                  case 0:
+                  case 1:
+                    msgText = game.add.bitmapText(game.width/2-200, 100, 'desyrel',"Don't let your highness meter take a hit!",20);
+                    msgCounter = 500;
+                    break;
+                  case 2:
+                    msgText = game.add.bitmapText(game.width/2-60, 100, 'desyrel',"Hey, man!",20);
+                    msgCounter = 500;
+                    break;
+                  case 3:
+                    msgText = game.add.bitmapText(game.width/2-120, 100, 'desyrel',"Respect my authority!",20);
+                    msgCounter = 500;
+                    break;
+                  case 4:
+                    msgText = game.add.bitmapText(game.width/2-110, 100, 'desyrel','"Catch me! Come on!"',20);
+                    msgCounter = 500;
+                    break;
+                  case 5:
+                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Ease the stress a bit...",20);
+                    msgCounter = 500;
+                    break;
+                  // more cases?
+
+
+                  default:
+                    // nothing
+                }
+            }
+            else
+            {
+                // not showing a message, but must still wait to show one
+                msgWait--;
+            }
+
+
+
 
 
             if (m_player1.highness <= 0)
@@ -548,7 +614,7 @@ function main()
     function pauseOnClick() {
         if(!paused) {
             pause.setFrames(0,1,0);
-            console.log("Nailed it");
+            //console.log("Nailed it");
             menu = game.add.sprite(0,0,MENU_KEY);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
@@ -580,8 +646,11 @@ function main()
     }
 
     function randomizeBG() {
-        game.stage.backgroundColor = getRandomColor();
-        // todo: make this only for not-paused state
+        if (!paused)
+        {
+            game.stage.backgroundColor = getRandomColor();
+            // todo: make this only for not-paused state
+        }
     }
 
     function getRandomColor() {
