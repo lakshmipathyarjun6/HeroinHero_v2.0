@@ -1,0 +1,20 @@
+{"frames": {
+
+"QuitButton.png":
+{
+	"frame": {"x":0,"y":0,"w":165,"h":80},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":165,"h":80},
+	"sourceSize": {"w":165,"h":80}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "quitbuttonspriteatlas.png",
+	"format": "RGBA8888",
+	"size": {"w":165,"h":80},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:767ffea80b4f336367c116f7f6a8329d:5c5dda4ebfdc2adec1f366b38d5e30c4:0e8d01e7e7f8c5845898bc0278da3f92$"
+}
+}

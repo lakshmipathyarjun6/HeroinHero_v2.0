@@ -3,6 +3,9 @@ var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
 var HIGHNESS_DECR_VAL = 0.1;
 
+var START_MENU_1 = 'smenu1';
+var START_MENU_2 = 'smenu2';
+var MENU_KEY = 'menu';
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
@@ -12,6 +15,8 @@ var WEED_KEY = 'alcohol';
 var LSD_KEY = 'alcohol';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
+var DEATH_KEY = 'death';
+var RECOVERY_KEY = 'recovery';
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -25,6 +30,8 @@ var DRAGON_LEFT = 0;
 var DRAGON_DOWN = 0;
 var PAUSE_BUTTON = 'pause';
 var MUTE_BUTTON = 'mute';
+var RETRY_BUTTON = 'retry';
+var QUIT_BUTTON = 'quit';
 var MUTE_STATE = 0;
 var paused = false;
 var muted = false;
@@ -173,7 +180,7 @@ HeroinPickup.prototype.constructor = HeroinPickup;
 
 WaterBucketPickup = function (game, x, y)
 {
-    Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -30);
+   Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -30);
 }
 
 WaterBucketPickup.prototype = Object.create(Pickup.prototype);
@@ -188,7 +195,7 @@ WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 function main()
 {
     msgCounter = 0;
-    msgWait = 0;
+    msgWait = 3000;
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
@@ -196,7 +203,7 @@ function main()
     var player_speed = 4;
     var audioelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
-    BOUND_TOP = 200;
+    BOUND_TOP = 250;
     BOUND_RIGHT = game.width-100;
     BOUND_LEFT = 300;
 
@@ -210,15 +217,24 @@ function main()
     {
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
+        game.load.image(START_MENU_1, 'assets/images/menu/startMenu1.png');
+        game.load.image(START_MENU_2, 'assets/images/menu/startMenu2.png');
+        game.load.image(MENU_KEY, 'assets/images/menu/menu.png');
         game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
         game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
-        game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
-        game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
+        game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
+        game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
+        game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
+        game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
-    //  audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
+        game.load.atlasJSONHash(RETRY_BUTTON,'assets/sprites/retrybuttonspriteatlas.png','assets/sprites/retrybutton.json');
+        game.load.atlasJSONHash(QUIT_BUTTON,'assets/sprites/quitbuttonspriteatlas.png','assets/sprites/quitbutton.json');
+
+
+        // audioelement.setAttribute('src','assets/audio/Game_Music.mp3');
 
         // add text for score display
         game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml');
@@ -230,17 +246,17 @@ function main()
     function create ()
     {
         //setup floor
-        floor = game.add.tileSprite(0,game.height/2, game.width,game.height/2,'floor');
+        floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
         //create pause button
         pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,1,0,1);
         pausekey = game.input.keyboard.addKey(Phaser.Keyboard.P);
-        pausekey.onDown.add(pauseOnClick, this); 
+        pausekey.onDown.add(pauseOnClick, this);
 
         //create mute button
         mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
         mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-        mutekey.onDown.add(muteOnClick, this); 
+        mutekey.onDown.add(muteOnClick, this);
 
         dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
@@ -265,10 +281,27 @@ function main()
         bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
         //cropRect = {x : 0, y : 0 , width : 400, height : 10};
-        //game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+        // game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
         //audioelement.play();
         //audioelement.loop = true;
 
+        smenu2 = game.add.sprite(0,0,START_MENU_2);
+        smenu1 = game.add.sprite(0,0,START_MENU_1);
+
+        //  Create our Timer
+        timer = game.time.create(false);
+
+        //  Set a TimerEvent to occur after 3 seconds
+        timer.add(10000, fadePictures, this);
+
+        //  Start the timer running - this is important!
+        //  It won't start automatically, allowing you to hook it to button events and the like.
+        timer.start();
+
+        smenu2.alhpa = 0;
+
+        game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
+        paused = true;
 
     }
 
@@ -282,11 +315,11 @@ function main()
         {
 
             // check player's death
-            if (! m_player1.isAlive)
-            {
-                // Oh no!
-                endOfGame(scoreCounter);
-            }
+            //if (! m_player1.isAlive)
+            //{
+            //    // Oh no!
+            //    endOfGame(scoreCounter);
+            //}
 
 
             var numPickups = m_actorsList.length;
@@ -329,11 +362,11 @@ function main()
                 m_player1.isAlive = false;
 
             // check player's death again, just in case
-            if (! m_player1.isAlive)
-            {
-                // Oh no!
-                endOfGame(scoreCounter);
-            }
+            //if (! m_player1.isAlive)
+            //{
+            //    // Oh no!
+            //    endOfGame(scoreCounter);
+            //}
 
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
@@ -374,7 +407,7 @@ function main()
                     DRAGON_DOWN = 1;
                 else
                     dragon.y -= dragon_speed/2;
-            }  
+            }
 
 
             /////////////////////////////
@@ -383,7 +416,7 @@ function main()
 
             var rand = Math.floor( (Math.random() * 1000) + 1 );
 
-            if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) && m_player1.x > BOUND_LEFT)
+            if ((game.input.keyboard.isDown(Phaser.Keyboard.LEFT)||game.input.keyboard.isDown(Phaser.Keyboard.A)) && m_player1.x > BOUND_LEFT)
             {
                 if (rand <= 50 && m_player1.highness >= 400)
                 {
@@ -393,21 +426,21 @@ function main()
                 {
                     m_player1.x -= player_speed;
                 }
-            } 
+            }
 
-            if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) && m_player1.x < BOUND_RIGHT)
+            if ((game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) || game.input.keyboard.isDown(Phaser.Keyboard.D))&& m_player1.x < BOUND_RIGHT)
             {
                 if (rand <= 50 && m_player1.highness >= 400)
                 {
                     m_player1.x -= player_speed;
                 }
                 else
-                { 
+                {
                     m_player1.x += player_speed;
                 }
             }
 
-            if (game.input.keyboard.isDown(Phaser.Keyboard.UP) && m_player1.y > BOUND_TOP)
+            if ((game.input.keyboard.isDown(Phaser.Keyboard.UP) || game.input.keyboard.isDown(Phaser.Keyboard.W)) && m_player1.y > BOUND_TOP)
             {
                 if(m_player1.x > BOUND_LEFT)
                 {
@@ -418,11 +451,11 @@ function main()
                     m_player1.y += player_speed;
                 }
                 else
-                { 
+                {
                     m_player1.y -= player_speed;
                 }
             }
-            if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN) && m_player1.y < BOUND_BOTTOM)
+            if ((game.input.keyboard.isDown(Phaser.Keyboard.DOWN) || game.input.keyboard.isDown(Phaser.Keyboard.S)) && m_player1.y < BOUND_BOTTOM)
             {
                 if(m_player1.x < BOUND_RIGHT)
                 {
@@ -433,7 +466,7 @@ function main()
                     m_player1.y -= player_speed;
                 }
                 else
-                { 
+                {
                     m_player1.y += player_speed;
                 }
             }
@@ -448,7 +481,7 @@ function main()
             // Randomly create a pickup
             /////////////////////////////
 
-            var randInt = Math.floor( (Math.random()*10000)); // between 
+            var randInt = Math.floor( (Math.random()*10000)); // between
 
             // Let's make some drugs
             if (randInt < 20)
@@ -456,6 +489,7 @@ function main()
                 // Heroin!!!
                 m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
             }
+
             else if (randInt >= 20 && randInt < 40)
             {
                 // Alcohol
@@ -475,6 +509,10 @@ function main()
             {
                 // Bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
+            }
+            if(player_speed > 0)
+            {
+                player_speed -= 0.0002;
             }
 
             /////////////////////////////
@@ -518,8 +556,14 @@ function main()
 
 
 
-        }
 
+
+            if (m_player1.highness <= 0)
+            {
+                revealDeathScreen();
+            }
+
+        }
     }
 
     function collisionHandler(p, pkup) {
@@ -529,6 +573,10 @@ function main()
         if (m_player1.highness > MAX_HIGHNESS)
         {
             m_player1.highness = MAX_HIGHNESS;
+        }
+        if (m_player1.highness <= 0)
+        {
+            revealDeathScreen();
         }
     }
 
@@ -541,15 +589,17 @@ function main()
     }
 
     function pauseOnClick() {
-        if(!paused){
+        if(!paused) {
             pause.setFrames(0,1,0);
-            console.log("Nailed it");
+            //console.log("Nailed it");
+            menu = game.add.sprite(0,0,MENU_KEY);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
             SCROLL_SPEED  = 0;
             m_player1.animations.stop("walk",true);
             dragon.animations.stop("fly",true);
         } else {
+            menu.destroy();
             pause.setFrames(1,0,1);
             paused = false;
             SCROLL_SPEED  = 2;
@@ -561,23 +611,94 @@ function main()
     function muteOnClick() {
         if(!muted){
             mute.setFrames(0,1,0);
-            console.log("Mute");
+            //console.log("Mute");
             muted = true;
         } else {
-            console.log("Unmute");
+            //console.log("Unmute");
             mute.setFrames(1,0,1);
             muted = false;
         }
     }
 
+    function randomizeBG() {
+        game.stage.backgroundColor = getRandomColor();
+        // todo: make this only for not-paused state
+    }
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.round(Math.random() * 15)];
+        }
+        return color;
+    }
+
+    function fadePictures() {
+
+        //  Cross-fade the two pictures
+        var tween;
+
+        if (smenu1.alpha == 1)
+        {
+            tween = game.add.tween(smenu1).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+            game.add.tween(smenu2).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+        }
+
+        //  When the cross-fade is complete we swap the image being shown by the now hidden picture
+        //tween.onComplete.add(changePicture, this);
+        game.time.events.add(Phaser.Timer.SECOND * 8,start, this);
+
+    }
+
+    function start() {
+            game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+            paused = false;
+    }
+
+    function revealDeathScreen()
+    {
+        paused = true;
+        death = game.add.sprite(0,0,DEATH_KEY);
+        retry_button = game.add.button(game.world.centerX - 160, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
+        quit_button = game.add.button(game.world.centerX + 40, 400, QUIT_BUTTON, actionQuit, this, 0, 0, 0);
+    }
+
+    function actionRetry()
+    {
+        for (var k=0; k < m_actorsList.length; k++)
+        {
+            m_actorsList[k].isAlive = false;
+        }
+        player_speed = 4;
+        dragon.x = 10;
+        dragon.y = 300;
+        m_player1.x = game.width-100;
+        m_player1.y = game.height/2;
+        m_player1.highness = STARTING_HIGHNESS;
+        scoreCounter = 0;
+        death.destroy();
+        retry_button.destroy();
+        quit_button.destroy();
+        paused = false;
+    }
+
+    function actionQuit()
+    {
+        for (var k=0; k < m_actorsList.length; k++)
+        {
+            m_actorsList[k].isAlive = false;
+        }
+        retry_button.destroy();
+        quit_button.destroy();
+        recovery = game.add.sprite(0,0,RECOVERY_KEY);
+    }
 };
 
 
-function endOfGame(endScore)
-{
-
-    // todo
-    alert("It's time to face real life!");
-    console.log("You died.");
-
-}
+//function endOfGame(endScore)
+//{
+//    alert("It's time to face real life!");
+//    console.log("You died.");
+//
+//}
