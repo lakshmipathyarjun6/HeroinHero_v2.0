@@ -735,6 +735,7 @@ function main()
         m_player1.highness = STARTING_HIGHNESS;
         m_player1.isAlive = true;
         scoreCounter = 0;
+        music.play();
         death.destroy();
         retry_button.destroy();
         quit_button.destroy();
