@@ -217,7 +217,7 @@ function main()
         game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
 	game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
 	game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
-        game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
+        game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
