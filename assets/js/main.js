@@ -546,7 +546,7 @@ function main()
     function pauseOnClick() {
         if(!paused) {
             pause.setFrames(0,1,0);
-            console.log("Nailed it");
+            //console.log("Nailed it");
             menu = game.add.sprite(0,0,MENU_KEY);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
@@ -566,18 +566,21 @@ function main()
     function muteOnClick() {
         if(!muted){
             mute.setFrames(0,1,0);
-            console.log("Mute");
+            //console.log("Mute");
             muted = true;
         } else {
-            console.log("Unmute");
+            //console.log("Unmute");
             mute.setFrames(1,0,1);
             muted = false;
         }
     }
 
     function randomizeBG() {
-        game.stage.backgroundColor = getRandomColor();
-        // todo: make this only for not-paused state
+        if (!paused)
+        {
+            game.stage.backgroundColor = getRandomColor();
+            // todo: make this only for not-paused state
+        }
     }
 
     function getRandomColor() {
