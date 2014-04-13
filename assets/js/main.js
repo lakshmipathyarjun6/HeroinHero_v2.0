@@ -44,7 +44,7 @@ var PLAYER_WALK_RATE = 10;
 // override key values
 
 window.onload = main()
-ALCOHOL_KEY = PLAYER2_KEY;
+//ALCOHOL_KEY = PLAYER2_KEY;
 //WEED_KEY = PLAYER2_KEY;
 LSD_KEY = PLAYER2_KEY;
 
@@ -235,6 +235,7 @@ function main()
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
+        game.load.image(ALCOHOL_KEY, 'assets/images/drugs/beer/Beer.png');
 
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
