@@ -13,7 +13,6 @@ var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
 var ALCOHOL_KEY = 'alcohol';
 var WEED_KEY = 'weed';
-//var LSD_KEY = 'acid';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
@@ -43,16 +42,7 @@ var in_menu = true;
 
 var calledEnd = false;
 
-// DEBUG
-// override key values
-
 window.onload = main()
-//ALCOHOL_KEY = PLAYER2_KEY;
-//WEED_KEY = PLAYER2_KEY;
-//LSD_KEY = PLAYER2_KEY;
-
-
-
 
 
 
@@ -128,18 +118,6 @@ Pickup.prototype = Object.create(Actor.prototype);
 Pickup.prototype.constructor = Pickup;
 
 
-
-/////////////////////////////////////
-//// LSD class
-/////////////////////////////////////
-//
-//LSDPickup = function (game, x, y)
-//{
-//    Pickup.call(this, game, x, y, LSD_KEY, 40);
-//}
-//
-//LSDPickup.prototype = Object.create(Pickup.prototype);
-//LSDPickup.prototype.constructor = LSDPickup;
 
 ///////////////////////////////////
 // Weed class
@@ -605,16 +583,6 @@ function main()
                 // not showing a message, but must still wait to show one
                 msgWait--;
             }
-
-
-
-
-
-            //if (!m_player1.isAlive)
-            //{
-            //    endOfGame();
-            //}
-
         }
     }
 
@@ -626,7 +594,6 @@ function main()
         {
             m_player1.highness = MAX_HIGHNESS;
         }
-
     }
 
     function render() {
@@ -635,14 +602,12 @@ function main()
         }
         //game.debug.body(m_player1);
         //game.debug.body(heroin_syringe);
-        //bucket = new WaterBucketPickup(game,100,100);
         //game.debug.body();
     }
 
     function pauseOnClick() {
         if(!paused) {
             pause.setFrames(0,1,0);
-            //console.log("Nailed it");
             menu = game.add.sprite(0,0,MENU_KEY);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
@@ -661,6 +626,7 @@ function main()
         }
 
     }
+
     function muteOnClick() {
         if(!muted){
             mute.setFrames(0,1,0);
@@ -717,7 +683,6 @@ function main()
 
     function endOfGame()
     {
-        console.log("endOfGame called");
         calledEnd = true;
         SCROLL_SPEED = 0;
         paused = true;
@@ -781,15 +746,7 @@ function main()
             next.destroy();
             start();
         }
-            
-            
     }
 };
 
 
-//function endOfGame(endScore)
-//{
-//    alert("It's time to face real life!");
-//    console.log("You died.");
-//
-//}
