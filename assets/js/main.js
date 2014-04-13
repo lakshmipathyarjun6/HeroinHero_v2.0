@@ -3,6 +3,7 @@ var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
 var HIGHNESS_DECR_VAL = 0.1;
 
+var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
 var START_MENU_2 = 'smenu2';
 var MENU_KEY = 'menu';
@@ -37,6 +38,7 @@ var paused = false;
 var muted = false;
 var DRAGON_FLY_RATE = 10;
 var PLAYER_WALK_RATE = 10;
+var in_menu = true;
 
 
 // DEBUG
@@ -221,6 +223,7 @@ function main()
         game.load.image(START_MENU_2, 'assets/images/menu/startMenu2.png');
         game.load.image(MENU_KEY, 'assets/images/menu/menu.png');
         game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
+        game.load.spritesheet(NEXT_ARROW, 'assets/images/menu/next.png',156,102);
         game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
         game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
@@ -287,6 +290,7 @@ function main()
 
         smenu2 = game.add.sprite(0,0,START_MENU_2);
         smenu1 = game.add.sprite(0,0,START_MENU_1);
+        next = game.add.button(game.width-200,game.height-100,NEXT_ARROW,nextOnClick,this,0,0,0);
 
         //  Create our Timer
         timer = game.time.create(false);
@@ -597,7 +601,9 @@ function main()
     }
 
     function render() {
-        game.debug.geom(highnessMeter,'#ff0000');
+        if(!in_menu){
+            game.debug.geom(highnessMeter,'#ff0000');
+        }
         //game.debug.body(m_player1);
         //game.debug.body(heroin_syringe);
         //bucket = new WaterBucketPickup(game,100,100);
@@ -671,6 +677,8 @@ function main()
     }
 
     function start() {
+            next.destroy();
+            in_menu = false;
             game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
             paused = false;
     }
@@ -711,6 +719,17 @@ function main()
         retry_button.destroy();
         quit_button.destroy();
         recovery = game.add.sprite(0,0,RECOVERY_KEY);
+    }
+    function nextOnClick()
+    {
+        if (smenu1.alpha == 1){
+            fadePictures();
+        } else {
+            next.destroy();
+            start();
+        }
+            
+            
     }
 };
 
