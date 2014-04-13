@@ -11,8 +11,8 @@ var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
 var ALCOHOL_KEY = 'alcohol';
-var WEED_KEY = 'alcohol';
-var LSD_KEY = 'alcohol';
+var WEED_KEY = 'weed';
+var LSD_KEY = 'acid';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
@@ -44,7 +44,7 @@ var PLAYER_WALK_RATE = 10;
 
 window.onload = main()
 ALCOHOL_KEY = PLAYER2_KEY;
-WEED_KEY = PLAYER2_KEY;
+//WEED_KEY = PLAYER2_KEY;
 LSD_KEY = PLAYER2_KEY;
 
 
@@ -217,6 +217,8 @@ function main()
     {
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
+
+        // load images and spritesheets
         game.load.image(START_MENU_1, 'assets/images/menu/startMenu1.png');
         game.load.image(START_MENU_2, 'assets/images/menu/startMenu2.png');
         game.load.image(MENU_KEY, 'assets/images/menu/menu.png');
@@ -225,9 +227,12 @@ function main()
         game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
+
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
+        game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
+
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
         game.load.atlasJSONHash(RETRY_BUTTON,'assets/sprites/retrybuttonspriteatlas.png','assets/sprites/retrybutton.json');
