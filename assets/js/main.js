@@ -44,7 +44,7 @@ var PLAYER_WALK_RATE = 10;
 // override key values
 
 window.onload = main()
-ALCOHOL_KEY = PLAYER2_KEY;
+//ALCOHOL_KEY = PLAYER2_KEY;
 //WEED_KEY = PLAYER2_KEY;
 LSD_KEY = PLAYER2_KEY;
 
@@ -187,6 +187,18 @@ WaterBucketPickup = function (game, x, y)
 WaterBucketPickup.prototype = Object.create(Pickup.prototype);
 WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 
+///////////////////////////////////
+// Roommate class
+///////////////////////////////////
+
+Roommate = function (game, x, y)
+{
+   Pickup.call(this, game, x, y, PLAYER2_KEY, -60);
+}
+
+Roommate.prototype = Object.create(Pickup.prototype);
+Roommate.prototype.constructor = Roommate;
+
 
 ///////////////////////////////////
 // Main function
@@ -216,6 +228,7 @@ function main()
 
     function preload()
     {
+	    //createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
 
@@ -233,6 +246,7 @@ function main()
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
+        game.load.image(ALCOHOL_KEY, 'assets/images/drugs/beer/Beer.png');
 
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
@@ -326,6 +340,11 @@ function main()
             //    endOfGame(scoreCounter);
             //}
 
+            if (!m_player1.isAlive)
+            {
+                revealDeathScreen();
+            }
+
 
             var numPickups = m_actorsList.length;
 
@@ -367,11 +386,11 @@ function main()
                 m_player1.isAlive = false;
 
             // check player's death again, just in case
-            //if (! m_player1.isAlive)
-            //{
-            //    // Oh no!
-            //    endOfGame(scoreCounter);
-            //}
+            if (! m_player1.isAlive)
+            {
+                // Oh no!
+                revealDeathScreen();
+            }
 
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
@@ -518,6 +537,13 @@ function main()
                 // Bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
+            else if (randInt >= 80 && randInt < 90)
+            {
+                m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
+            }
+
+
+
             if(player_speed > 1)
             {
                 player_speed -= 0.0002;
@@ -579,10 +605,10 @@ function main()
 
 
 
-            if (m_player1.highness <= 0)
+          /*  if (!m_player1.isAlive)
             {
                 revealDeathScreen();
-            }
+            }*/
 
         }
     }
@@ -595,10 +621,10 @@ function main()
         {
             m_player1.highness = MAX_HIGHNESS;
         }
-        if (m_player1.highness <= 0)
+    /*    if (m_player1.highness <= 0)
         {
             revealDeathScreen();
-        }
+        }*/
     }
 
     function render() {
@@ -703,6 +729,7 @@ function main()
         m_player1.x = game.width-100;
         m_player1.y = game.height/2;
         m_player1.highness = STARTING_HIGHNESS;
+        m_player1.isAlive = true;
         scoreCounter = 0;
         death.destroy();
         retry_button.destroy();
