@@ -289,9 +289,9 @@ function main() {
 
         smenu2.alhpa = 0;
         
+        game.time.events.repeat(Phaser.Timer.SECOND * 2, 100000, randomizeBG, this);
         paused = true;
 
-        game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, randomizeBG, this);
 
 
     }
