@@ -514,29 +514,30 @@ function main()
 
 
 
-            // Let's make some drugs
-            if (randInt < 20)
+            if (randInt < 20 + (scoreCounter/100) ) // will overlap Alcohol
             {
-                // Heroin!!!
-                m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
+                // Water bucket = bad
+                // increase # over time
+                m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
 
+            // Let's make some drugs
             else if (randInt >= 20 && randInt < 50)
-            {
-                // Alcohol
-                m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
-            }
-            else if (randInt >= 50 && randInt < 70)
             {
                 // Weed
                 m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
             }
+            else if (randInt >= 50 && randInt < 70)
+            {
+                // Alcohol
+                m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
+            }
             else if (randInt >= 70 && randInt < 80)
             {
-                // Bad pickup
-                m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
+                // Heroin!!!
+                m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
             }
-            else if (randInt >= 80 && randInt < (90 + scoreCounter/1000) )
+            else if (randInt >= 80 && randInt < (90 + scoreCounter/100) )
             {
                 // increase # of evil roommates over time
                 m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
