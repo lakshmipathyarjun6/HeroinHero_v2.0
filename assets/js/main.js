@@ -483,6 +483,9 @@ function main()
 
             var randInt = Math.floor( (Math.random()*10000)); // between
 
+
+            
+
             // Let's make some drugs
             if (randInt < 20)
             {
@@ -534,11 +537,24 @@ function main()
                 switch(displayVal)
                 {
                   case 0:
+                  case 1:
                     msgText = game.add.bitmapText(game.width/2-200, 100, 'desyrel',"Don't let your highness meter take a hit!",20);
                     msgCounter = 500;
                     break;
-                  case 1:
+                  case 2:
                     msgText = game.add.bitmapText(game.width/2-60, 100, 'desyrel',"Hey, man!",20);
+                    msgCounter = 500;
+                    break;
+                  case 3:
+                    msgText = game.add.bitmapText(game.width/2-120, 100, 'desyrel',"Respect my authority!",20);
+                    msgCounter = 500;
+                    break;
+                  case 4:
+                    msgText = game.add.bitmapText(game.width/2-110, 100, 'desyrel','"Catch me! Come on!"',20);
+                    msgCounter = 500;
+                    break;
+                  case 5:
+                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Ease the stress a bit...",20);
                     msgCounter = 500;
                     break;
                   // more cases?
