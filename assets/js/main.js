@@ -721,8 +721,16 @@ function main()
         calledEnd = true;
         SCROLL_SPEED = 0;
         paused = true;
+
+        // kill animations
+        m_player1.animations.stop("walk",true);
+        dragon.animations.stop("fly",true);
+
         music.stop();
         death = game.add.sprite(0,0,DEATH_KEY);
+        death.anchor.setTo(0, 0);
+        death.alpha = 0;
+        game.add.tween(death).to( { alpha: 1 }, 4000, Phaser.Easing.Linear.None, true, 0, 0, false);
         retry_button = game.add.button(game.world.centerX - 160, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
         quit_button = game.add.button(game.world.centerX + 40, 400, QUIT_BUTTON, actionQuit, this, 0, 0, 0);
     }
@@ -737,6 +745,11 @@ function main()
         dragon.x = 10;
         dragon.y = 300;
         SCROLL_SPEED = 2;
+        
+        // restore animations
+        m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
+        dragon.animations.play("fly",DRAGON_FLY_RATE,true);
+
         m_player1.x = game.width-100;
         m_player1.y = game.height/2;
         m_player1.highness = STARTING_HIGHNESS;
