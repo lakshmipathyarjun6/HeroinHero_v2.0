@@ -244,7 +244,6 @@ function main()
         game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
-
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
@@ -345,6 +344,11 @@ function main()
             //    endOfGame(scoreCounter);
             //}
 
+            if (!m_player1.isAlive)
+            {
+                revealDeathScreen();
+            }
+
 
             var numPickups = m_actorsList.length;
 
@@ -386,11 +390,11 @@ function main()
                 m_player1.isAlive = false;
 
             // check player's death again, just in case
-            //if (! m_player1.isAlive)
-            //{
-            //    // Oh no!
-            //    endOfGame(scoreCounter);
-            //}
+            if (! m_player1.isAlive)
+            {
+                // Oh no!
+                revealDeathScreen();
+            }
 
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
@@ -420,14 +424,14 @@ function main()
             }
             if (DRAGON_DOWN == 1)
             {
-                if (dragon.y >= 350)
+                if (dragon.y >= 400)
                     DRAGON_DOWN = 0;
                 else
                     dragon.y += dragon_speed/2;
             }
             else
             {
-                if (dragon.y <= 90)
+                if (dragon.y <= 130)
                     DRAGON_DOWN = 1;
                 else
                     dragon.y -= dragon_speed/2;
@@ -601,10 +605,10 @@ function main()
 
 
 
-            if (m_player1.highness <= 0)
+          /*  if (!m_player1.isAlive)
             {
                 revealDeathScreen();
-            }
+            }*/
 
         }
     }
@@ -617,10 +621,10 @@ function main()
         {
             m_player1.highness = MAX_HIGHNESS;
         }
-        if (m_player1.highness <= 0)
+    /*    if (m_player1.highness <= 0)
         {
             revealDeathScreen();
-        }
+        }*/
     }
 
     function render() {
@@ -731,7 +735,9 @@ function main()
         m_player1.x = game.width-100;
         m_player1.y = game.height/2;
         m_player1.highness = STARTING_HIGHNESS;
+        m_player1.isAlive = true;
         scoreCounter = 0;
+        music.play();
         death.destroy();
         retry_button.destroy();
         quit_button.destroy();
