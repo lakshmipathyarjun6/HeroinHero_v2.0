@@ -6,9 +6,26 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="assets/js/phaser.js"></script>
         <script src="assets/js/main.js"></script>
-        <script src="assets/js/isaaCloud.js"></script>
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script>
+            window.icAsyncInit = function() {
+                IC.init({
+                    appName: 'myapp',
+                });
+            window.IC.hack("1d27d8898f63606467fbc2d42b77e99d");
+            };
+
+            (function(d, s, id){
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = "assets/js/icsdk2.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'isaacloud-jssdk'));
+            
+        </script>
         <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+        <script src="assets/js/isaaCloud.js"></script>
     </head>
     <body>
     </body>

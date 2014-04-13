@@ -230,7 +230,7 @@ function main()
 
     function preload()
     {
-        //createLeaderBoard();
+        createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
 
