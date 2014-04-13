@@ -12,10 +12,7 @@ $(document).ready(function(){
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("Authorization", "Bearer d05f373bd5dbdffda66923c3d9e29e") //May need to use "Authorization" instead
             },
-            dataType: "json",
-            sucess: function(result) {
-                alert('done');
-            }
+            dataType: "json"
         });
     });
 });
