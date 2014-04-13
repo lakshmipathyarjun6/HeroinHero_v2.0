@@ -1,7 +1,7 @@
 
 
 
-$(document).ready(function(){
+/*$(document).ready(function(){
     alert('go');
     $("#submit").click(function() {
         alert($("#username").val());
@@ -18,5 +18,5 @@ $(document).ready(function(){
             }
         });
     });
-});
+});*/
 
