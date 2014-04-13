@@ -1,7 +1,7 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.1;
+var HIGHNESS_DECR_VAL = 0.25;
 
 var START_MENU_1 = 'smenu1';
 var START_MENU_2 = 'smenu2';
@@ -17,6 +17,7 @@ var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
 var RECOVERY_KEY = 'recovery';
+var AUDIO_KEY = 'audio';
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -213,6 +214,7 @@ function main()
 
     function preload()
     {
+	    createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
         game.load.image(START_MENU_1, 'assets/images/menu/startMenu1.png');
@@ -225,6 +227,7 @@ function main()
         game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
+        game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
@@ -277,10 +280,9 @@ function main()
         scoreCounter = 0; // initial score
         bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
-        //cropRect = {x : 0, y : 0 , width : 400, height : 10};
-        // game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-        //audioelement.play();
-        //audioelement.loop = true;
+        music = game.add.audio(AUDIO_KEY);
+        music.loop = true;
+        music.play();
 
         smenu2 = game.add.sprite(0,0,START_MENU_2);
         smenu1 = game.add.sprite(0,0,START_MENU_1);
@@ -507,7 +509,7 @@ function main()
                 // Bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
-            if(player_speed > 0)
+            if(player_speed > 1)
             {
                 player_speed -= 0.0002;
             }
@@ -553,6 +555,7 @@ function main()
             SCROLL_SPEED  = 0;
             m_player1.animations.stop("walk",true);
             dragon.animations.stop("fly",true);
+            music.pause();
         } else {
             menu.destroy();
             pause.setFrames(1,0,1);
@@ -560,18 +563,19 @@ function main()
             SCROLL_SPEED  = 2;
             m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
             dragon.animations.play("fly",DRAGON_FLY_RATE,true);
+            music.resume();
         }
 
     }
     function muteOnClick() {
         if(!muted){
             mute.setFrames(0,1,0);
-            console.log("Mute");
             muted = true;
+            music.pause();
         } else {
-            console.log("Unmute");
             mute.setFrames(1,0,1);
             muted = false;
+            music.resume();
         }
     }
 
@@ -614,6 +618,7 @@ function main()
     function revealDeathScreen()
     {
         paused = true;
+        music.stop();
         death = game.add.sprite(0,0,DEATH_KEY);
         retry_button = game.add.button(game.world.centerX - 160, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
         quit_button = game.add.button(game.world.centerX + 40, 400, QUIT_BUTTON, actionQuit, this, 0, 0, 0);
