@@ -3,6 +3,8 @@ var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
 var HIGHNESS_DECR_VAL = 0.1;
 
+var START_MENU_1 = 'smenu1';
+var START_MENU_2 = 'smenu2';
 var MENU_KEY = 'menu';
 var PLAYER_KEY = 'ginger';
 var PLAYER2_KEY = 'fob';
@@ -174,7 +176,7 @@ HeroinPickup.prototype.constructor = HeroinPickup;
 
 WaterBucketPickup = function (game, x, y)
 {
-    Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -30);
+   Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -30);
 }
 
 WaterBucketPickup.prototype = Object.create(Pickup.prototype);
@@ -195,7 +197,7 @@ function main() {
     var player_speed = 4;
     var audioelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
-    BOUND_TOP = 200;
+    BOUND_TOP = 250;
     BOUND_RIGHT = game.width-100;
     BOUND_LEFT = 300;
 
@@ -208,10 +210,12 @@ function main() {
     function preload(){
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
+        game.load.image(START_MENU_1, 'assets/images/menu/startMenu1.png');
+        game.load.image(START_MENU_2, 'assets/images/menu/startMenu2.png');
         game.load.image(MENU_KEY, 'assets/images/menu/menu.png');
         game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
         game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
-        game.load.image(FLOOR_KEY, 'assets/images/floor/floor.jpeg');
+        game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(HEROIN_KEY, 'assets/images/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
@@ -226,8 +230,12 @@ function main() {
     var bmpText;
 
     function create () {
+
+        //start menu once
+
+        //game.add.tween(smenu1).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, 5000, true); 
         //setup floor
-        floor = game.add.tileSprite(0,game.height/2, game.width,game.height/2,'floor');
+        floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
         //create pause button
         pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,1,0,1);
@@ -266,7 +274,24 @@ function main() {
     //  audioelement.play();
     //  audioelement.loop = true;
 
+        smenu2 = game.add.sprite(0,0,START_MENU_2);
+        smenu1 = game.add.sprite(0,0,START_MENU_1);
+        
+        //  Create our Timer
+        timer = game.time.create(false);
 
+        //  Set a TimerEvent to occur after 3 seconds
+        timer.add(10000, fadePictures, this);
+
+        //  Start the timer running - this is important!
+        //  It won't start automatically, allowing you to hook it to button events and the like.
+        timer.start();
+
+        smenu2.alhpa = 0;
+        
+        paused = true;
+
+        game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, randomizeBG, this);
 
 
     }
@@ -527,6 +552,40 @@ function main() {
         }
     }
 
+    function randomizeBG() {
+            game.stage.backgroundColor = getRandomColor();
+    }
+            
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.round(Math.random() * 15)];
+        }
+        return color;
+    }
+
+    function fadePictures() {
+
+        //  Cross-fade the two pictures
+        var tween;
+
+        if (smenu1.alpha == 1)
+        {
+            tween = game.add.tween(smenu1).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+            game.add.tween(smenu2).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+        }
+
+        //  When the cross-fade is complete we swap the image being shown by the now hidden picture
+//        tween.onComplete.add(changePicture, this);
+        game.time.events.add(Phaser.Timer.SECOND * 8,start, this);
+
+    }
+    
+    function start() {
+            game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+            paused = false;
+    }
 };
 
 
@@ -534,6 +593,6 @@ function endOfGame(endScore)
 {
 
     // todo
-    alert("It's time to face real life!");
+    //alert("It's time to face real life!");
 
 }
