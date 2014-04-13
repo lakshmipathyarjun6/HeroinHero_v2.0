@@ -420,14 +420,14 @@ function main()
             }
             if (DRAGON_DOWN == 1)
             {
-                if (dragon.y >= 350)
+                if (dragon.y >= 400)
                     DRAGON_DOWN = 0;
                 else
                     dragon.y += dragon_speed/2;
             }
             else
             {
-                if (dragon.y <= 90)
+                if (dragon.y <= 130)
                     DRAGON_DOWN = 1;
                 else
                     dragon.y -= dragon_speed/2;
