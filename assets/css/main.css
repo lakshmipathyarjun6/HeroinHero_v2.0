@@ -5,3 +5,11 @@ canvas {
     display: block;
     background: black;
 }
+
+/*.user {
+    display: block;
+    border: solid 2px red;
+    margin: auto;
+    float: center;
+    position: absolute;
+}*/
