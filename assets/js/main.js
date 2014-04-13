@@ -733,7 +733,7 @@ function main()
         death.destroy();
         retry_button.destroy();
         quit_button.destroy();
-        paused = false;
+//        paused = false;
     }
 
     function actionQuit()
