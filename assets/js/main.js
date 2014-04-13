@@ -12,7 +12,7 @@ var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
 var ALCOHOL_KEY = 'alcohol';
 var WEED_KEY = 'weed';
-var LSD_KEY = 'acid';
+//var LSD_KEY = 'acid';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
@@ -46,7 +46,7 @@ var PLAYER_WALK_RATE = 10;
 window.onload = main()
 //ALCOHOL_KEY = PLAYER2_KEY;
 //WEED_KEY = PLAYER2_KEY;
-LSD_KEY = PLAYER2_KEY;
+//LSD_KEY = PLAYER2_KEY;
 
 
 
@@ -126,17 +126,17 @@ Pickup.prototype.constructor = Pickup;
 
 
 
-///////////////////////////////////
-// LSD class
-///////////////////////////////////
-
-LSDPickup = function (game, x, y)
-{
-    Pickup.call(this, game, x, y, LSD_KEY, 40);
-}
-
-LSDPickup.prototype = Object.create(Pickup.prototype);
-LSDPickup.prototype.constructor = LSDPickup;
+/////////////////////////////////////
+//// LSD class
+/////////////////////////////////////
+//
+//LSDPickup = function (game, x, y)
+//{
+//    Pickup.call(this, game, x, y, LSD_KEY, 40);
+//}
+//
+//LSDPickup.prototype = Object.create(Pickup.prototype);
+//LSDPickup.prototype.constructor = LSDPickup;
 
 ///////////////////////////////////
 // Weed class
@@ -228,7 +228,7 @@ function main()
 
     function preload()
     {
-	    //createLeaderBoard();
+        //createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
 
@@ -501,10 +501,10 @@ function main()
             // Randomly create a pickup
             /////////////////////////////
 
-            var randInt = Math.floor( (Math.random()*10000)); // between
+            var randInt = Math.floor( (Math.random()*3000)); // between
 
 
-            
+
 
             // Let's make some drugs
             if (randInt < 20)
@@ -513,15 +513,10 @@ function main()
                 m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
             }
 
-            else if (randInt >= 20 && randInt < 40)
+            else if (randInt >= 20 && randInt < 50)
             {
                 // Alcohol
                 m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
-            }
-            else if (randInt >= 40 && randInt < 50)
-            {
-                // Jimi Hendrix
-                m_actorsList.push(new LSDPickup(game, dragon.x+100, dragon.y+100));
             }
             else if (randInt >= 50 && randInt < 70)
             {
@@ -533,8 +528,9 @@ function main()
                 // Bad pickup
                 m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
             }
-            else if (randInt >= 80 && randInt < 90)
+            else if (randInt >= 80 && randInt < (90 + scoreCounter/1000) )
             {
+                // increase # of evil roommates over time
                 m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
             }
 
