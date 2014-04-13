@@ -183,7 +183,7 @@ HeroinPickup.prototype.constructor = HeroinPickup;
 
 WaterBucketPickup = function (game, x, y)
 {
-   Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -30);
+   Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -40);
 }
 
 WaterBucketPickup.prototype = Object.create(Pickup.prototype);
@@ -195,7 +195,7 @@ WaterBucketPickup.prototype.constructor = WaterBucketPickup;
 
 Roommate = function (game, x, y)
 {
-   Pickup.call(this, game, x, y, PLAYER2_KEY, -60);
+   Pickup.call(this, game, x, y, PLAYER2_KEY, -70);
 }
 
 Roommate.prototype = Object.create(Pickup.prototype);
