@@ -1,7 +1,7 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.25;
+var HIGHNESS_DECR_VAL = 0.15;
 
 var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
@@ -294,16 +294,14 @@ function main()
         timer = game.time.create(false);
 
         //  Set a TimerEvent to occur after 3 seconds
+        paused = true;
         timer.add(10000, fadePictures, this);
 
         //  Start the timer running - this is important!
         //  It won't start automatically, allowing you to hook it to button events and the like.
         timer.start();
 
-        smenu2.alhpa = 0;
-
         game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
-        paused = true;
 
     }
 
@@ -491,9 +489,9 @@ function main()
 
             if (!calledEnd)
             {
-                var randInt = Math.floor( (Math.random()*3000)); // between
+                var randInt = Math.floor( (Math.random()*3000));
 
-                if (randInt < 20 + (scoreCounter/100) ) // will overlap Alcohol
+                if (randInt < ((scoreCounter/50) - 10) ) // will overlap Weed over time
                 {
                     // Water bucket = bad
                     // increase # over time
@@ -501,7 +499,7 @@ function main()
                 }
 
                 // Let's make some drugs
-                else if (randInt >= 20 && randInt < 50)
+                else if (randInt < 50) // overlapped by WaterBuckets over time
                 {
                     // Weed
                     m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
@@ -516,7 +514,8 @@ function main()
                     // Heroin!!!
                     m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
                 }
-                else if (randInt >= 80 && randInt < (90 + scoreCounter/100) )
+                else if (randInt >= 80 && randInt < (70 + scoreCounter / 160) )
+                // impossible to make evil roommates in the beginning of the game.
                 {
                     // increase # of evil roommates over time
                     m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
@@ -563,7 +562,7 @@ function main()
                     break;
                   case 4:
                   case 5:
-                    msgText = game.add.bitmapText(game.width/2-130, 100, 'desyrel','"Catch me! Come on!"',20);
+                    msgText = game.add.bitmapText(game.width/2-90, 100, 'desyrel','"Catch me! Come on!"',20);
                     msgCounter = 500;
                     break;
                   case 6:
@@ -587,9 +586,12 @@ function main()
     }
 
     function collisionHandler(p, pkup) {
-        pkup.isAlive = false; // kill him
+        pkup.isAlive = false; // kill the pickup
         m_player1.highness += pkup.strength;
-        scoreCounter += pkup.strength;
+        if (pkup.strength > 0)
+        {
+            scoreCounter += pkup.strength;
+        }
         if (m_player1.highness > MAX_HIGHNESS)
         {
             m_player1.highness = MAX_HIGHNESS;
