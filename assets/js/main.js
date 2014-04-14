@@ -42,6 +42,7 @@ var in_menu = true;
 
 var calledEnd = false;
 
+
 window.onload = main()
 
 
@@ -66,6 +67,8 @@ Actor = function (game, x, y, key)
 
     // Enable game physics
     game.physics.enable(this, Phaser.Physics.ARCADE);
+
+    // DEBUG
 };
 
 Actor.prototype = Object.create(Phaser.Sprite.prototype);
@@ -263,7 +266,8 @@ function main()
         mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
         mutekey.onDown.add(muteOnClick, this);
 
-        dragon = game.add.sprite(10,300,DRAGON_KEY);
+        dragon = new Dragon(game, 10, 300);
+        //dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
         dragon.scale.x = .3;
         dragon.animations.add('fly');
@@ -314,12 +318,6 @@ function main()
         if(!paused)
         {
 
-            // check player's death
-            //if (! m_player1.isAlive)
-            //{
-            //    // Oh no!
-            //    endOfGame(scoreCounter);
-            //}
 
             if (!m_player1.isAlive && !calledEnd)
             {
@@ -356,7 +354,10 @@ function main()
                 {
                     // He's dead, Jim
                     m_actorsList[k].exists = false; // clear from screen
+                    m_actorsList[k].destroy();
                     m_actorsList.splice(k,1); // remove that one element
+
+
                 }
 
             }
