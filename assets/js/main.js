@@ -1,8 +1,9 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.1;
+var HIGHNESS_DECR_VAL = 0.25;
 
+var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
 var START_MENU_2 = 'smenu2';
 var MENU_KEY = 'menu';
@@ -11,12 +12,12 @@ var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
 var ALCOHOL_KEY = 'alcohol';
-var WEED_KEY = 'alcohol';
-var LSD_KEY = 'alcohol';
+var WEED_KEY = 'weed';
 var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
 var RECOVERY_KEY = 'recovery';
+var AUDIO_KEY = 'audio';
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -37,18 +38,11 @@ var paused = false;
 var muted = false;
 var DRAGON_FLY_RATE = 10;
 var PLAYER_WALK_RATE = 10;
+var in_menu = true;
 
-
-// DEBUG
-// override key values
+var calledEnd = false;
 
 window.onload = main()
-ALCOHOL_KEY = PLAYER2_KEY;
-WEED_KEY = PLAYER2_KEY;
-LSD_KEY = PLAYER2_KEY;
-
-
-
 
 
 
@@ -126,18 +120,6 @@ Pickup.prototype.constructor = Pickup;
 
 
 ///////////////////////////////////
-// LSD class
-///////////////////////////////////
-
-LSDPickup = function (game, x, y)
-{
-    Pickup.call(this, game, x, y, LSD_KEY, 40);
-}
-
-LSDPickup.prototype = Object.create(Pickup.prototype);
-LSDPickup.prototype.constructor = LSDPickup;
-
-///////////////////////////////////
 // Weed class
 ///////////////////////////////////
 
@@ -180,11 +162,23 @@ HeroinPickup.prototype.constructor = HeroinPickup;
 
 WaterBucketPickup = function (game, x, y)
 {
-   Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -30);
+   Pickup.call(this, game, x, y, WATER_BUCKET_KEY, -40);
 }
 
 WaterBucketPickup.prototype = Object.create(Pickup.prototype);
 WaterBucketPickup.prototype.constructor = WaterBucketPickup;
+
+///////////////////////////////////
+// Roommate class
+///////////////////////////////////
+
+Roommate = function (game, x, y)
+{
+   Pickup.call(this, game, x, y, PLAYER2_KEY, -70);
+}
+
+Roommate.prototype = Object.create(Pickup.prototype);
+Roommate.prototype.constructor = Roommate;
 
 
 ///////////////////////////////////
@@ -215,19 +209,27 @@ function main()
 
     function preload()
     {
+        //createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
+
+        // load images and spritesheets
         game.load.image(START_MENU_1, 'assets/images/menu/startMenu1.png');
         game.load.image(START_MENU_2, 'assets/images/menu/startMenu2.png');
         game.load.image(MENU_KEY, 'assets/images/menu/menu.png');
         game.load.spritesheet(PAUSE_BUTTON, 'assets/sprites/pausespritesheet.png',64,64);
+        game.load.spritesheet(NEXT_ARROW, 'assets/images/menu/next.png',156,102);
         game.load.spritesheet(MUTE_BUTTON, 'assets/sprites/soundbuttonspritesheet.png',64,64);
         game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
+        game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
+        game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
+        game.load.image(ALCOHOL_KEY, 'assets/images/drugs/beer/Beer.png');
+
         game.load.atlasJSONHash(PLAYER_KEY,'assets/sprites/playerspriteatlas.png','assets/sprites/playersprite.json');
         game.load.atlasJSONHash(DRAGON_KEY,'assets/sprites/dragonspriteatlas.png','assets/sprites/dragonsprite.json');
         game.load.atlasJSONHash(RETRY_BUTTON,'assets/sprites/retrybuttonspriteatlas.png','assets/sprites/retrybutton.json');
@@ -245,6 +247,9 @@ function main()
 
     function create ()
     {
+        music = game.add.audio(AUDIO_KEY);
+        music.loop = true;
+        music.play();
         //setup floor
         floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
@@ -280,13 +285,10 @@ function main()
         scoreCounter = 0; // initial score
         bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
-        //cropRect = {x : 0, y : 0 , width : 400, height : 10};
-        // game.add.tween(cropRect).to(310, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-        //audioelement.play();
-        //audioelement.loop = true;
 
         smenu2 = game.add.sprite(0,0,START_MENU_2);
         smenu1 = game.add.sprite(0,0,START_MENU_1);
+        next = game.add.button(game.width-200,game.height-100,NEXT_ARROW,nextOnClick,this,0,0,0);
 
         //  Create our Timer
         timer = game.time.create(false);
@@ -320,6 +322,11 @@ function main()
             //    // Oh no!
             //    endOfGame(scoreCounter);
             //}
+
+            if (!m_player1.isAlive && !calledEnd)
+            {
+                endOfGame();
+            }
 
 
             var numPickups = m_actorsList.length;
@@ -362,11 +369,11 @@ function main()
                 m_player1.isAlive = false;
 
             // check player's death again, just in case
-            //if (! m_player1.isAlive)
-            //{
-            //    // Oh no!
-            //    endOfGame(scoreCounter);
-            //}
+            if (!m_player1.isAlive && !calledEnd)
+            {
+                // Oh no!
+                endOfGame();
+            }
 
             highnessMeter.width = m_player1.highness;
             //game.add.tween(highnessMeter).to({x: '+10'},2000.Phaser.Easing.Linear.None,true);
@@ -396,14 +403,14 @@ function main()
             }
             if (DRAGON_DOWN == 1)
             {
-                if (dragon.y >= 350)
+                if (dragon.y >= 400)
                     DRAGON_DOWN = 0;
                 else
                     dragon.y += dragon_speed/2;
             }
             else
             {
-                if (dragon.y <= 90)
+                if (dragon.y <= 130)
                     DRAGON_DOWN = 1;
                 else
                     dragon.y -= dragon_speed/2;
@@ -473,7 +480,7 @@ function main()
 
             if (player_speed > 0)
             {
-                player_speed -= 0.0002;
+                player_speed -= 0.0001;
             }
 
 
@@ -481,41 +488,46 @@ function main()
             // Randomly create a pickup
             /////////////////////////////
 
-            var randInt = Math.floor( (Math.random()*10000)); // between
+
+            if (!calledEnd)
+            {
+                var randInt = Math.floor( (Math.random()*3000)); // between
+
+                if (randInt < 20 + (scoreCounter/100) ) // will overlap Alcohol
+                {
+                    // Water bucket = bad
+                    // increase # over time
+                    m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
+                }
+
+                // Let's make some drugs
+                else if (randInt >= 20 && randInt < 50)
+                {
+                    // Weed
+                    m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
+                }
+                else if (randInt >= 50 && randInt < 70)
+                {
+                    // Alcohol
+                    m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
+                }
+                else if (randInt >= 70 && randInt < 80)
+                {
+                    // Heroin!!!
+                    m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
+                }
+                else if (randInt >= 80 && randInt < (90 + scoreCounter/100) )
+                {
+                    // increase # of evil roommates over time
+                    m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
+                }
 
 
-            
 
-            // Let's make some drugs
-            if (randInt < 20)
-            {
-                // Heroin!!!
-                m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
-            }
-
-            else if (randInt >= 20 && randInt < 40)
-            {
-                // Alcohol
-                m_actorsList.push(new AlcoholPickup(game, dragon.x+100, dragon.y+100) );
-            }
-            else if (randInt >= 40 && randInt < 50)
-            {
-                // Jimi Hendrix
-                m_actorsList.push(new LSDPickup(game, dragon.x+100, dragon.y+100));
-            }
-            else if (randInt >= 50 && randInt < 70)
-            {
-                // Weed
-                m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
-            }
-            else if (randInt >= 70 && randInt < 80)
-            {
-                // Bad pickup
-                m_actorsList.push(new WaterBucketPickup(game, dragon.x+100, dragon.y+100));
-            }
-            if(player_speed > 0)
-            {
-                player_speed -= 0.0002;
+                if(player_speed > 1)
+                {
+                    player_speed -= 0.0002;
+                }
             }
 
             /////////////////////////////
@@ -533,7 +545,7 @@ function main()
             }
             else if (msgWait == 0)// time for a new message
             {
-                var displayVal = Math.floor( Math.random() * 500 );
+                var displayVal = Math.floor( Math.random() * 10 );
                 switch(displayVal)
                 {
                   case 0:
@@ -542,18 +554,20 @@ function main()
                     msgCounter = 500;
                     break;
                   case 2:
-                    msgText = game.add.bitmapText(game.width/2-60, 100, 'desyrel',"Hey, man!",20);
+                    msgText = game.add.bitmapText(game.width/2-45, 100, 'desyrel',"Hey, man!",20);
                     msgCounter = 500;
                     break;
                   case 3:
-                    msgText = game.add.bitmapText(game.width/2-120, 100, 'desyrel',"Respect my authority!",20);
+                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Respect my authority!",20);
                     msgCounter = 500;
                     break;
                   case 4:
-                    msgText = game.add.bitmapText(game.width/2-110, 100, 'desyrel','"Catch me! Come on!"',20);
+                  case 5:
+                    msgText = game.add.bitmapText(game.width/2-130, 100, 'desyrel','"Catch me! Come on!"',20);
                     msgCounter = 500;
                     break;
-                  case 5:
+                  case 6:
+                  case 7:
                     msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Ease the stress a bit...",20);
                     msgCounter = 500;
                     break;
@@ -569,16 +583,6 @@ function main()
                 // not showing a message, but must still wait to show one
                 msgWait--;
             }
-
-
-
-
-
-            if (m_player1.highness <= 0)
-            {
-                revealDeathScreen();
-            }
-
         }
     }
 
@@ -590,30 +594,27 @@ function main()
         {
             m_player1.highness = MAX_HIGHNESS;
         }
-        if (m_player1.highness <= 0)
-        {
-            revealDeathScreen();
-        }
     }
 
     function render() {
-        game.debug.geom(highnessMeter,'#ff0000');
+        if(!in_menu){
+            game.debug.geom(highnessMeter,'#ff0000');
+        }
         //game.debug.body(m_player1);
         //game.debug.body(heroin_syringe);
-        //bucket = new WaterBucketPickup(game,100,100);
         //game.debug.body();
     }
 
     function pauseOnClick() {
         if(!paused) {
             pause.setFrames(0,1,0);
-            //console.log("Nailed it");
             menu = game.add.sprite(0,0,MENU_KEY);
             k = new Phaser.Rectangle(300,300,300,300);
             paused = true;
             SCROLL_SPEED  = 0;
             m_player1.animations.stop("walk",true);
             dragon.animations.stop("fly",true);
+            music.pause();
         } else {
             menu.destroy();
             pause.setFrames(1,0,1);
@@ -621,18 +622,20 @@ function main()
             SCROLL_SPEED  = 2;
             m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
             dragon.animations.play("fly",DRAGON_FLY_RATE,true);
+            music.resume();
         }
 
     }
+
     function muteOnClick() {
         if(!muted){
             mute.setFrames(0,1,0);
-            //console.log("Mute");
             muted = true;
+            music.pause();
         } else {
-            //console.log("Unmute");
             mute.setFrames(1,0,1);
             muted = false;
+            music.resume();
         }
     }
 
@@ -640,7 +643,6 @@ function main()
         if (!paused)
         {
             game.stage.backgroundColor = getRandomColor();
-            // todo: make this only for not-paused state
         }
     }
 
@@ -671,14 +673,29 @@ function main()
     }
 
     function start() {
-            game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
-            paused = false;
+        next.destroy();
+        smenu1.destroy();
+        in_menu = false;
+        game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+        paused = false;
+        smenu2.destroy();
     }
 
-    function revealDeathScreen()
+    function endOfGame()
     {
+        calledEnd = true;
+        SCROLL_SPEED = 0;
         paused = true;
+
+        // kill animations
+        m_player1.animations.stop("walk",true);
+        dragon.animations.stop("fly",true);
+
+        music.stop();
         death = game.add.sprite(0,0,DEATH_KEY);
+        death.anchor.setTo(0, 0);
+        death.alpha = 0;
+        game.add.tween(death).to( { alpha: 1 }, 4000, Phaser.Easing.Linear.None, true, 0, 0, false);
         retry_button = game.add.button(game.world.centerX - 160, 400, RETRY_BUTTON, actionRetry, this, 0, 0, 0);
         quit_button = game.add.button(game.world.centerX + 40, 400, QUIT_BUTTON, actionQuit, this, 0, 0, 0);
     }
@@ -692,14 +709,23 @@ function main()
         player_speed = 4;
         dragon.x = 10;
         dragon.y = 300;
+        SCROLL_SPEED = 2;
+        
+        // restore animations
+        m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
+        dragon.animations.play("fly",DRAGON_FLY_RATE,true);
+
         m_player1.x = game.width-100;
         m_player1.y = game.height/2;
         m_player1.highness = STARTING_HIGHNESS;
+        m_player1.isAlive = true;
         scoreCounter = 0;
+        music.play();
         death.destroy();
         retry_button.destroy();
         quit_button.destroy();
         paused = false;
+        calledEnd = false;
     }
 
     function actionQuit()
@@ -712,12 +738,15 @@ function main()
         quit_button.destroy();
         recovery = game.add.sprite(0,0,RECOVERY_KEY);
     }
+    function nextOnClick()
+    {
+        if (smenu1.alpha == 1){
+            fadePictures();
+        } else {
+            next.destroy();
+            start();
+        }
+    }
 };
 
 
-//function endOfGame(endScore)
-//{
-//    alert("It's time to face real life!");
-//    console.log("You died.");
-//
-//}
