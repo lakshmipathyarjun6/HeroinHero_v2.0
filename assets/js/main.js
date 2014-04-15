@@ -230,7 +230,7 @@ function main()
 
     function preload()
     {
-        createLeaderBoard();
+        $.getScript('assets/js/leaderboard.js', function() {});
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
 
@@ -716,6 +716,7 @@ function main()
 
     function revealDeathScreen()
     {
+        getUser();
         paused = true;
         music.stop();
         death = game.add.sprite(0,0,DEATH_KEY);
@@ -765,6 +766,12 @@ function main()
             
             
     }
+    function getUser(){
+        $('#name').css('display','show');
+        $('#username').css('display','show');
+        $('#submit').css('display','show');
+        
+    };
 };
 
 

@@ -1,22 +1,37 @@
 
 
 
-<<<<<<< HEAD
-=======
-/*$(document).ready(function(){
-    alert('go');
+
+var uploading = $(document).ready(function(){
+    $('#name').css('display','none');
+    $('#username').css('display','none');
+    $('#submit').css('display','none');
+    
     $("#submit").click(function() {
-        alert($("#username").val());
-        
-        $.ajax({
-            type: 'POST',
-            url: 'https://api.isaacloud.com/v1/admin/leaderboards',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("Authorization", "Bearer d05f373bd5dbdffda66923c3d9e29e") //May need to use "Authorization" instead
-            },
-            dataType: "json"
+        alert($("#name").val());
+        Clay.ready(function() {
+            var leaderboard = new Clay.Leaderboard({id: 'CTDleaderboard'});
+            
+            var username = $("#name").val();
+            console.log(username);
+            var options = {score: 100,name:username};
+            leaderboard.post(options,function(response) {
+                console.log('500 logged');
+            });
+            var showoptions = { // all of these are optional
+                //html: "<strong>Hi</strong>", // Optional, any custom html you want to show below the name recent: 3600, // Optional, to limit scores to ones posted in last x seconds
+                //sort: 'asc', // Optional, sorting by "asc" will show the lowest scores first (ex. for fastest times)
+                //filter: ['day', 'month'], // Optional, Array of filters to narrow down high scores
+                //cumulative: false, // Optional, if set to true grabs the sum of all scores for each player
+                //best: false, // Optional, if set to true grabs the best score from each player //limit: 10, // Optional, how many scores to show (0 for all). Default is 10
+                //self: true, // Optional, Boolean if set to true shows just the scores of the player viewing
+                //friends: false, // Optional, Boolean if set to true shows just the scores of the player viewing AND their Clay.io friends
+                showPersonal: true // Optional, Boolean on if the player's stats (rank & high score) should show below the name. Default is false
+            };
+            leaderboard.show( showoptions,function(response) {
+                console.log( response );
+            });
         });
     });
-});*/
+});
 
->>>>>>> endGame
