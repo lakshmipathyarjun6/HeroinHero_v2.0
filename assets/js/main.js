@@ -36,11 +36,13 @@ var QUIT_BUTTON = 'quit';
 var MUTE_STATE = 0;
 var paused = false;
 var muted = false;
+var wasMuted = false;
 var DRAGON_FLY_RATE = 10;
 var PLAYER_WALK_RATE = 10;
 var in_menu = true;
 
 var calledEnd = false;
+var gameHasStarted = false;
 
 
 window.onload = main()
@@ -212,6 +214,8 @@ function main()
 
     function preload()
     {
+        //muted = false; // default
+
         //createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
@@ -250,9 +254,6 @@ function main()
 
     function create ()
     {
-        music = game.add.audio(AUDIO_KEY);
-        music.loop = true;
-        music.play();
         //setup floor
         floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
@@ -307,6 +308,10 @@ function main()
 
         game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
 
+        music = game.add.audio(AUDIO_KEY);
+        music.loop = true;
+        music.play();
+
     }
 
     m_actorsList = new Array(); // empty
@@ -314,6 +319,10 @@ function main()
 
     function update()
     {
+        if(muted)
+            music.pause();
+        else
+            music.resume();
 
         if(!paused)
         {
@@ -617,7 +626,8 @@ function main()
             SCROLL_SPEED  = 0;
             m_player1.animations.stop("walk",true);
             dragon.animations.stop("fly",true);
-            music.pause();
+            wasMuted = muted;
+            muted = true;
         } else {
             menu.destroy();
             pause.setFrames(1,0,1);
@@ -625,12 +635,17 @@ function main()
             SCROLL_SPEED  = 2;
             m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
             dragon.animations.play("fly",DRAGON_FLY_RATE,true);
-            music.resume();
+            muted = wasMuted;
         }
 
     }
 
     function muteOnClick() {
+        if (paused)
+        {
+            // do nothing
+            return;
+        }
         if(!muted){
             mute.setFrames(0,1,0);
             muted = true;
@@ -676,12 +691,16 @@ function main()
     }
 
     function start() {
-        next.destroy();
-        smenu1.destroy();
-        in_menu = false;
-        game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
-        paused = false;
-        smenu2.destroy();
+        if (!gameHasStarted)
+        {
+            next.destroy();
+            smenu1.destroy();
+            in_menu = false;
+            game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+            paused = false;
+            smenu2.destroy();
+            gameHasStarted = true;
+        }
     }
 
     function endOfGame()
@@ -724,6 +743,13 @@ function main()
         m_player1.isAlive = true;
         scoreCounter = 0;
         music.play();
+        if (muted)
+        {
+            // we don't really want the music to be heard then
+            music.pause()
+            // we update the mute button to start with the correct image
+            mute.setFrames(0,1,0);
+        }
         death.destroy();
         retry_button.destroy();
         quit_button.destroy();
