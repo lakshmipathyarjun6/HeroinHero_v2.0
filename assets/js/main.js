@@ -344,6 +344,7 @@ function main()
             {
                 game.physics.arcade.overlap(m_player1,m_actorsList[k],collisionHandler); //bind collisionHandler to player
             }
+            game.physics.arcade.overlap(m_player1,dragon,winGame); //bind collisionHandler to player
 
             // Move each pickup
             for (var k=0; k < numPickups; k++)
@@ -595,6 +596,11 @@ function main()
         }
     }
 
+    function winGame() {
+        console.log("Congratulations! You won the game! You're a real hacker.");
+        scoreCounter += 999999999999999999;
+        dragon.x = 10;
+    }
     function collisionHandler(p, pkup) {
         pkup.isAlive = false; // kill the pickup
         m_player1.highness += pkup.strength;
