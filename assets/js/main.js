@@ -1,7 +1,7 @@
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.25;
+var HIGHNESS_DECR_VAL = 0.15;
 
 var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
@@ -36,11 +36,14 @@ var QUIT_BUTTON = 'quit';
 var MUTE_STATE = 0;
 var paused = false;
 var muted = false;
+var wasMuted = false;
 var DRAGON_FLY_RATE = 10;
 var PLAYER_WALK_RATE = 10;
 var in_menu = true;
 
 var calledEnd = false;
+var gameHasStarted = false;
+
 
 window.onload = main()
 
@@ -66,6 +69,8 @@ Actor = function (game, x, y, key)
 
     // Enable game physics
     game.physics.enable(this, Phaser.Physics.ARCADE);
+
+    // DEBUG
 };
 
 Actor.prototype = Object.create(Phaser.Sprite.prototype);
@@ -209,6 +214,8 @@ function main()
 
     function preload()
     {
+        //muted = false; // default
+
         //createLeaderBoard();
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
@@ -247,9 +254,6 @@ function main()
 
     function create ()
     {
-        music = game.add.audio(AUDIO_KEY);
-        music.loop = true;
-        music.play();
         //setup floor
         floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
@@ -263,7 +267,8 @@ function main()
         mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
         mutekey.onDown.add(muteOnClick, this);
 
-        dragon = game.add.sprite(10,300,DRAGON_KEY);
+        dragon = new Dragon(game, 10, 300);
+        //dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
         dragon.scale.x = .3;
         dragon.animations.add('fly');
@@ -294,16 +299,18 @@ function main()
         timer = game.time.create(false);
 
         //  Set a TimerEvent to occur after 3 seconds
+        paused = true;
         timer.add(10000, fadePictures, this);
 
         //  Start the timer running - this is important!
         //  It won't start automatically, allowing you to hook it to button events and the like.
         timer.start();
 
-        smenu2.alhpa = 0;
-
         game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
-        paused = true;
+
+        music = game.add.audio(AUDIO_KEY);
+        music.loop = true;
+        music.play();
 
     }
 
@@ -312,16 +319,14 @@ function main()
 
     function update()
     {
+        if(muted)
+            music.pause();
+        else
+            music.resume();
 
         if(!paused)
         {
 
-            // check player's death
-            //if (! m_player1.isAlive)
-            //{
-            //    // Oh no!
-            //    endOfGame(scoreCounter);
-            //}
 
             if (!m_player1.isAlive && !calledEnd)
             {
@@ -339,6 +344,7 @@ function main()
             {
                 game.physics.arcade.overlap(m_player1,m_actorsList[k],collisionHandler); //bind collisionHandler to player
             }
+            game.physics.arcade.overlap(m_player1,dragon,winGame); //bind collisionHandler to player
 
             // Move each pickup
             for (var k=0; k < numPickups; k++)
@@ -358,7 +364,10 @@ function main()
                 {
                     // He's dead, Jim
                     m_actorsList[k].exists = false; // clear from screen
+                    m_actorsList[k].destroy();
                     m_actorsList.splice(k,1); // remove that one element
+
+
                 }
 
             }
@@ -491,9 +500,9 @@ function main()
 
             if (!calledEnd)
             {
-                var randInt = Math.floor( (Math.random()*3000)); // between
+                var randInt = Math.floor( (Math.random()*3000));
 
-                if (randInt < 20 + (scoreCounter/100) ) // will overlap Alcohol
+                if (randInt < ((scoreCounter/50) - 10) ) // will overlap Weed over time
                 {
                     // Water bucket = bad
                     // increase # over time
@@ -501,7 +510,7 @@ function main()
                 }
 
                 // Let's make some drugs
-                else if (randInt >= 20 && randInt < 50)
+                else if (randInt < 50) // overlapped by WaterBuckets over time
                 {
                     // Weed
                     m_actorsList.push(new WeedPickup(game, dragon.x+100, dragon.y+100) );
@@ -516,7 +525,8 @@ function main()
                     // Heroin!!!
                     m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
                 }
-                else if (randInt >= 80 && randInt < (90 + scoreCounter/100) )
+                else if (randInt >= 80 && randInt < (70 + scoreCounter / 160) )
+                // impossible to make evil roommates in the beginning of the game.
                 {
                     // increase # of evil roommates over time
                     m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
@@ -563,7 +573,7 @@ function main()
                     break;
                   case 4:
                   case 5:
-                    msgText = game.add.bitmapText(game.width/2-130, 100, 'desyrel','"Catch me! Come on!"',20);
+                    msgText = game.add.bitmapText(game.width/2-90, 100, 'desyrel','"Catch me! Come on!"',20);
                     msgCounter = 500;
                     break;
                   case 6:
@@ -586,10 +596,18 @@ function main()
         }
     }
 
+    function winGame() {
+        console.log("Congratulations! You won the game! You're a real hacker.");
+        scoreCounter += 999999999999999999;
+        dragon.x = 10;
+    }
     function collisionHandler(p, pkup) {
-        pkup.isAlive = false; // kill him
+        pkup.isAlive = false; // kill the pickup
         m_player1.highness += pkup.strength;
-        scoreCounter += pkup.strength;
+        if (pkup.strength > 0)
+        {
+            scoreCounter += pkup.strength;
+        }
         if (m_player1.highness > MAX_HIGHNESS)
         {
             m_player1.highness = MAX_HIGHNESS;
@@ -614,7 +632,8 @@ function main()
             SCROLL_SPEED  = 0;
             m_player1.animations.stop("walk",true);
             dragon.animations.stop("fly",true);
-            music.pause();
+            wasMuted = muted;
+            muted = true;
         } else {
             menu.destroy();
             pause.setFrames(1,0,1);
@@ -622,12 +641,17 @@ function main()
             SCROLL_SPEED  = 2;
             m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
             dragon.animations.play("fly",DRAGON_FLY_RATE,true);
-            music.resume();
+            muted = wasMuted;
         }
 
     }
 
     function muteOnClick() {
+        if (paused)
+        {
+            // do nothing
+            return;
+        }
         if(!muted){
             mute.setFrames(0,1,0);
             muted = true;
@@ -673,12 +697,16 @@ function main()
     }
 
     function start() {
-        next.destroy();
-        smenu1.destroy();
-        in_menu = false;
-        game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
-        paused = false;
-        smenu2.destroy();
+        if (!gameHasStarted)
+        {
+            next.destroy();
+            smenu1.destroy();
+            in_menu = false;
+            game.add.tween(smenu2).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
+            paused = false;
+            smenu2.destroy();
+            gameHasStarted = true;
+        }
     }
 
     function endOfGame()
@@ -721,6 +749,13 @@ function main()
         m_player1.isAlive = true;
         scoreCounter = 0;
         music.play();
+        if (muted)
+        {
+            // we don't really want the music to be heard then
+            music.pause()
+            // we update the mute button to start with the correct image
+            mute.setFrames(0,1,0);
+        }
         death.destroy();
         retry_button.destroy();
         quit_button.destroy();
