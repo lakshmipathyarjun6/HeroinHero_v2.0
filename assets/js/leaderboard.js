@@ -3,18 +3,19 @@
 
 
 var uploading = $(document).ready(function(){
-    $('#name').css('display','none');
-    $('#username').css('display','none');
-    $('#submit').css('display','none');
+    $('#info').css('display','none');
+    //$('#username').css('display','none');
+    //$('#submit').css('display','none');
     
     $("#submit").click(function() {
-        alert($("#name").val());
         Clay.ready(function() {
             var leaderboard = new Clay.Leaderboard({id: 'CTDleaderboard'});
             
             var username = $("#name").val();
+            var score = document.getElementById("score").innerHTML;
+            alert(username + " " + score);
             console.log(username);
-            var options = {score: 100,name:username};
+            var options = {score: score,name:username};
             var showoptions = { // all of these are optional
                 //html: "<strong>Hi</strong>", // Optional, any custom html you want to show below the name recent: 3600, // Optional, to limit scores to ones posted in last x seconds
                 //sort: 'asc', // Optional, sorting by "asc" will show the lowest scores first (ex. for fastest times)
@@ -26,9 +27,9 @@ var uploading = $(document).ready(function(){
                 showPersonal: true // Optional, Boolean on if the player's stats (rank & high score) should show below the name. Default is false
             };
             leaderboard.post(options,function(response) {
-                $('#name').css('display','none');
-                $('#username').css('display','none');
-                $('#submit').css('display','none');
+                $('#info').css('display','none');
+                //$('#username').css('display','none');
+                //$('#submit').css('display','none');
                 leaderboard.show( showoptions,function(response) {
                     console.log( response );
                 });

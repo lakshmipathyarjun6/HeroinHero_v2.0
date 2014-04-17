@@ -9,27 +9,32 @@ canvas {
 ul li {
     list-style-type:none;
     display: inline;
+    text-align; center;
+    padding: 3px;
+}
+
+#info {
+    position: absolute;
+    background: white;
+    margin: auto;
+    display: block;
+    top: 270px;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 5px 5px 5px 5px black;
 }
 
 #name {
-    margin: auto;
-    display: block;
-    position: absolute;
-    
-    top: 290px;
+    text-align: left;
     
 }
 #username {
-    position: absolute;
-    margin: auto;
-    display: block;
-    top: 290px;
+    text-align: right;
     
 }
+
 #submit {
-    position: absolute;
-    margin: auto;
-    display: block;
-    top: 320px;
+    text-align: center;
+    margin-left: 110px;
     
 }
