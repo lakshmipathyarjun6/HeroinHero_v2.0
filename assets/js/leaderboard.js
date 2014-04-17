@@ -13,7 +13,6 @@ var uploading = $(document).ready(function(){
             
             var username = $("#name").val();
             var score = document.getElementById("score").innerHTML;
-            alert(username + " " + score);
             console.log(username);
             var options = {score: score,name:username};
             var showoptions = { // all of these are optional
