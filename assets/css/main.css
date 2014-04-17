@@ -6,3 +6,30 @@ canvas {
     background: black;
 }
 
+ul li {
+    list-style-type:none;
+    display: inline;
+}
+
+#name {
+    margin: auto;
+    display: block;
+    position: absolute;
+    
+    top: 290px;
+    
+}
+#username {
+    position: absolute;
+    margin: auto;
+    display: block;
+    top: 290px;
+    
+}
+#submit {
+    position: absolute;
+    margin: auto;
+    display: block;
+    top: 320px;
+    
+}

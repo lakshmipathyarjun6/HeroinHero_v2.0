@@ -770,6 +770,8 @@ function main()
         $('#name').css('display','show');
         $('#username').css('display','show');
         $('#submit').css('display','show');
+        $('#name').css('left',$(document).width()/2 - $('#name').width()/2+'px');
+        $('#submit').css('left',$(document).width()/2 - $('#submit').width()/2+'px');
         
     };
 };

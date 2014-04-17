@@ -15,9 +15,6 @@ var uploading = $(document).ready(function(){
             var username = $("#name").val();
             console.log(username);
             var options = {score: 100,name:username};
-            leaderboard.post(options,function(response) {
-                console.log('500 logged');
-            });
             var showoptions = { // all of these are optional
                 //html: "<strong>Hi</strong>", // Optional, any custom html you want to show below the name recent: 3600, // Optional, to limit scores to ones posted in last x seconds
                 //sort: 'asc', // Optional, sorting by "asc" will show the lowest scores first (ex. for fastest times)
@@ -28,8 +25,13 @@ var uploading = $(document).ready(function(){
                 //friends: false, // Optional, Boolean if set to true shows just the scores of the player viewing AND their Clay.io friends
                 showPersonal: true // Optional, Boolean on if the player's stats (rank & high score) should show below the name. Default is false
             };
-            leaderboard.show( showoptions,function(response) {
-                console.log( response );
+            leaderboard.post(options,function(response) {
+                $('#name').css('display','none');
+                $('#username').css('display','none');
+                $('#submit').css('display','none');
+                leaderboard.show( showoptions,function(response) {
+                    console.log( response );
+                });
             });
         });
     });
