@@ -215,7 +215,7 @@ function main()
     function preload()
     {
         $.getScript('assets/js/leaderboard.js', function() {});
-        
+
         Phaser.Canvas.setSmoothingEnabled(game.context,false);
         game.stage.backgroundColor = '#ffffff';
 
@@ -250,6 +250,7 @@ function main()
 
     var bmpText;
     var msgText;
+    var scoreCounter;
 
     function create ()
     {
@@ -738,7 +739,7 @@ function main()
         dragon.x = 10;
         dragon.y = 300;
         SCROLL_SPEED = 2;
-        
+
         // restore animations
         m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
         dragon.animations.play("fly",DRAGON_FLY_RATE,true);
@@ -789,7 +790,7 @@ function main()
         //$('#submit').css('display','show');
         $('#info').css('left',$(document).width()/2 - $('#info').width()/2+'px');
         $('#submit').css('left',$(document).width()/2 - $('#submit').width()/2+'px');
-        
+
     };
 };
 
