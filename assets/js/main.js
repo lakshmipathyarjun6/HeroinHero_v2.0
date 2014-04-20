@@ -251,6 +251,10 @@ function main()
     var bmpText;
     var msgText;
     var scoreCounter;
+    var highnessMeter;
+    var m_player1;
+    var m_actorsList;
+    var timer;
 
     function create ()
     {
