@@ -7,9 +7,8 @@ On the Web
 ----------
 
 You can play our project on the web at:
-```
+
 http://heroinhero.clay.io/
-```
 
 About Our Project
 -----------------
