@@ -8,6 +8,7 @@ var START_MENU_1 = 'smenu1';
 var START_MENU_2 = 'smenu2';
 var MENU_KEY = 'menu';
 var PLAYER_KEY = 'ginger';
+var SFX_KEY = 'sfx';
 var PLAYER2_KEY = 'fob';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
@@ -201,6 +202,7 @@ function main()
     var dragon_speed = 4;
     var player_speed = 4;
     var audioelement = document.createElement('audio');
+    var sfxelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
     BOUND_TOP = 250;
     BOUND_RIGHT = game.width-100;
@@ -232,6 +234,7 @@ function main()
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
+        game.load.audio(SFX_KEY, 'assets/audio/catcme.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
         game.load.image(ALCOHOL_KEY, 'assets/images/drugs/beer/Beer.png');
@@ -312,6 +315,7 @@ function main()
 
         game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
 
+        sfx = game.add.audio(SFX_KEY);
         music = game.add.audio(AUDIO_KEY);
         music.loop = true;
         music.play();
@@ -429,6 +433,11 @@ function main()
                     dragon.y -= dragon_speed/2;
             }
 
+            var randmusic = Math.floor( (Math.random() * 1000) + 1 );
+            if(randmusic < 70){
+                sfx.play();
+            }
+                
 
             /////////////////////////////
             // Get user input
