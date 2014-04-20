@@ -493,7 +493,7 @@ function main()
 
             if (player_speed > 0)
             {
-                player_speed -= 0.0001;
+                player_speed -= 0.00001;
             }
 
 
