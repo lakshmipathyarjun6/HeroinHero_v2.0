@@ -2,6 +2,7 @@
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
 var HIGHNESS_DECR_VAL = 0.15;
+var sfxCount = 200;
 
 var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
@@ -234,7 +235,7 @@ function main()
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
-        game.load.audio(SFX_KEY, 'assets/audio/catcme.mp3');
+        game.load.audio(SFX_KEY, 'assets/audio/Catch_Me.m4a');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
         game.load.image(ALCOHOL_KEY, 'assets/images/drugs/beer/Beer.png');
@@ -317,6 +318,7 @@ function main()
 
         sfx = game.add.audio(SFX_KEY);
         music = game.add.audio(AUDIO_KEY);
+        sfx.loop = false;
         music.loop = true;
         music.play();
 
@@ -433,8 +435,8 @@ function main()
                     dragon.y -= dragon_speed/2;
             }
 
-            var randmusic = Math.floor( (Math.random() * 1000) + 1 );
-            if(randmusic < 70){
+            if(!muted && (scoreCounter >= sfxCount)){
+                sfxCount += 200;
                 sfx.play();
             }
                 
@@ -669,10 +671,12 @@ function main()
             mute.setFrames(0,1,0);
             muted = true;
             music.pause();
+            sfx.pause();
         } else {
             mute.setFrames(1,0,1);
             muted = false;
             music.resume();
+            sfx.resume();
         }
     }
 
