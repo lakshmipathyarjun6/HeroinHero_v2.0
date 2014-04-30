@@ -324,7 +324,7 @@ function main()
 
     }
 
-    m_actorsList = new Array(); // empty
+    var m_actorsList = new Array(); // empty
 
 
     function update()
@@ -375,6 +375,7 @@ function main()
                     // He's dead, Jim
                     m_actorsList[k].exists = false; // clear from screen
                     m_actorsList[k].destroy();
+                    delete m_actorsList[k]; // free memory
                     m_actorsList.splice(k,1); // remove that one element
 
 
