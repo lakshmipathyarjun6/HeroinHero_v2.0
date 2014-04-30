@@ -25,10 +25,11 @@ var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
 var CANVAS_X_MAX = 920;
 var CANVAS_X_MIN = 0;
-var BOUND_BOTTOM = 0;
-var BOUND_TOP = 0;
-var BOUND_LEFT = 0;
-var BOUND_RIGHT = 0;
+var BOUND_TOP = 250;
+var BOUND_LEFT = 500; // starting value
+var MAX_BOUND_LEFT = 300;
+var BOUND_RIGHT; // initialized later
+var BOUND_BOTTOM; // initialized later
 var DRAGON_LEFT = 0;
 var DRAGON_DOWN = 0;
 var PAUSE_BUTTON = 'pause';
@@ -205,9 +206,7 @@ function main()
     var audioelement = document.createElement('audio');
     var sfxelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
-    BOUND_TOP = 250;
     BOUND_RIGHT = game.width-100;
-    BOUND_LEFT = 300;
 
 
 
@@ -343,6 +342,20 @@ function main()
             {
                 endOfGame();
             }
+
+            // adjust player's box
+            if (scoreCounter > 0 && scoreCounter < 1000)
+                BOUND_LEFT = 400 + ((1000-scoreCounter) / 10);
+
+            else if (scoreCounter > 1000 && scoreCounter < 2000)
+                BOUND_LEFT = 340 + ((2000-scoreCounter) / 16);
+
+            else if (scoreCounter > 2000 && scoreCounter < 3000)
+                BOUND_LEFT = 300 + ((3000-scoreCounter) / 25);
+
+            else
+                BOUND_LEFT = 300;
+
 
 
             var numPickups = m_actorsList.length;
