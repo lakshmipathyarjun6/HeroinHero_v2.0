@@ -10,7 +10,7 @@ var START_MENU_2 = 'smenu2';
 var MENU_KEY = 'menu';
 var PLAYER_KEY = 'ginger';
 var SFX_KEY = 'sfx';
-var PLAYER2_KEY = 'fob';
+var PLAYER2_KEY = 'asian';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
 var ALCOHOL_KEY = 'alcohol';
@@ -235,7 +235,7 @@ function main()
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
-        game.load.audio(SFX_KEY, 'assets/audio/Catch_Me.m4a');
+        game.load.audio(SFX_KEY, 'assets/audio/Catch_Me.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
         game.load.image(ALCOHOL_KEY, 'assets/images/drugs/beer/Beer.png');
@@ -262,6 +262,13 @@ function main()
 
     function create ()
     {
+        // play music
+        sfx = game.add.audio(SFX_KEY);
+        music = game.add.audio(AUDIO_KEY);
+        sfx.loop = false;
+        music.loop = true;
+        music.play();
+
         //setup floor
         floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
@@ -315,12 +322,6 @@ function main()
         timer.start();
 
         game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
-
-        sfx = game.add.audio(SFX_KEY);
-        music = game.add.audio(AUDIO_KEY);
-        sfx.loop = false;
-        music.loop = true;
-        music.play();
 
     }
 
@@ -436,11 +437,14 @@ function main()
                     dragon.y -= dragon_speed/2;
             }
 
-            if(!muted && (scoreCounter >= sfxCount)){
+            if(scoreCounter >= sfxCount){
                 sfxCount += 200;
-                sfx.play();
+                if (!muted)
+                {
+                    sfx.play();
+                }
             }
-                
+
 
             /////////////////////////////
             // Get user input
@@ -710,11 +714,11 @@ function main()
 
         //  When the cross-fade is complete we swap the image being shown by the now hidden picture
         //tween.onComplete.add(changePicture, this);
-        game.time.events.add(Phaser.Timer.SECOND * 8,start, this);
+        game.time.events.add(Phaser.Timer.SECOND * 8,startGame, this);
 
     }
 
-    function start() {
+    function startGame() {
         if (!gameHasStarted)
         {
             next.destroy();
@@ -726,6 +730,11 @@ function main()
             gameHasStarted = true;
         }
     }
+
+
+    var death;
+    var retry_button;
+    var quit_button;
 
     function endOfGame()
     {
@@ -770,14 +779,20 @@ function main()
         music.play();
         if (muted)
         {
-            // we don't really want the music to be heard then
+            // we don't really want the music to be heard in this case
             music.pause()
             // we update the mute button to start with the correct image
             mute.setFrames(0,1,0);
         }
         death.destroy();
+        delete death;
+
         retry_button.destroy();
+        delete retry_button;
+
         quit_button.destroy();
+        delete quit_button;
+
         paused = false;
         calledEnd = false;
     }
@@ -788,8 +803,15 @@ function main()
         {
             m_actorsList[k].isAlive = false;
         }
+        death.destroy();
+        delete death;
+
         retry_button.destroy();
+        delete retry_button;
+
         quit_button.destroy();
+        delete quit_button;
+
         recovery = game.add.sprite(0,0,RECOVERY_KEY);
     }
     function nextOnClick()
@@ -798,7 +820,7 @@ function main()
             fadePictures();
         } else {
             next.destroy();
-            start();
+            startGame();
         }
     }
     function getUser(){
