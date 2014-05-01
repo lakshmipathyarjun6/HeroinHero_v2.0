@@ -27,7 +27,6 @@ var CANVAS_X_MAX = 920;
 var CANVAS_X_MIN = 0;
 var BOUND_TOP = 250;
 var BOUND_LEFT = 500; // starting value
-var MAX_BOUND_LEFT = 300;
 var BOUND_RIGHT; // initialized later
 var BOUND_BOTTOM; // initialized later
 var DRAGON_LEFT = 0;
@@ -72,8 +71,6 @@ Actor = function (game, x, y, key)
 
     // Enable game physics
     game.physics.enable(this, Phaser.Physics.ARCADE);
-
-    // DEBUG
 };
 
 Actor.prototype = Object.create(Phaser.Sprite.prototype);
@@ -344,18 +341,17 @@ function main()
             }
 
             // adjust player's box
-            if (scoreCounter > 0 && scoreCounter < 1000)
+            if (scoreCounter >= 0 && scoreCounter < 1000)
                 BOUND_LEFT = 400 + ((1000-scoreCounter) / 10);
 
-            else if (scoreCounter > 1000 && scoreCounter < 2000)
+            else if (scoreCounter >= 1000 && scoreCounter < 2000)
                 BOUND_LEFT = 340 + ((2000-scoreCounter) / 16);
 
-            else if (scoreCounter > 2000 && scoreCounter < 3000)
+            else if (scoreCounter >= 2000 && scoreCounter < 3000)
                 BOUND_LEFT = 300 + ((3000-scoreCounter) / 25);
 
             else
                 BOUND_LEFT = 300;
-
 
 
             var numPickups = m_actorsList.length;
@@ -652,8 +648,9 @@ function main()
             game.debug.geom(highnessMeter,'#ff0000');
         }
         //game.debug.body(m_player1);
-        //game.debug.body(heroin_syringe);
-        //game.debug.body();
+        //for (var k=0; k < m_actorsList.length; k++)
+        //    game.debug.body(m_actorsList[k]);
+
     }
 
     function pauseOnClick() {
