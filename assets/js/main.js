@@ -1,3 +1,23 @@
+/**************************************************************************
+ *
+ * HeroinHero version 2.0
+ *
+ * Authors: Joraaver Chahal, Arjun Lakshmipathy, Nate Fischer
+ * Built at LA Hacks April 2014
+ *
+ * Based on the "Guitar Queer-o" episode from Southpark
+ *
+ * Music credit goes to Pogo. If you like the music, check out more of his
+ * stuff here:
+ * http://www.youtube.com/user/Fagottron
+ *
+ * This is an open source game. Feel free to distribute the source code.
+ * Feel free to play our game and distribute links to our game. If you want
+ * to be part of the development of this game, make a pull request on our
+ * Github Repo. Enjoy!
+ *
+ *************************************************************************/
+
 // GLOBAL VALUES
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
@@ -185,6 +205,30 @@ Roommate = function (game, x, y)
 Roommate.prototype = Object.create(Pickup.prototype);
 Roommate.prototype.constructor = Roommate;
 
+/*
+
+                       .     _///_,
+                     .      / ` ' '>
+                       )   o'  __/_'>
+                      (   /  _/  )_\'>
+                       ' "__/   /_/\_>
+                           ____/_/_/_/
+                          /,---, _/ /
+                         ""  /_/_/_/
+                            /_(_(_(_                 \
+                           (   \_\_\\_               )\
+                            \'__\_\_\_\__            ).\
+                            //____|___\__)           )_/
+                            |  _  \'___'_(           /'
+                             \_ (-'\'___'_\      __,'_'
+                             __) \  \\___(_   __/.__,'
+                   b'ger  ,((,-,__\  '", __\_/. __,'
+                                       '"./_._._-'
+
+You caught the dragon!
+from: http://www.chris.com/ascii/index.php?art=creatures%2Fdragons
+
+*/
 
 ///////////////////////////////////
 // Main function
