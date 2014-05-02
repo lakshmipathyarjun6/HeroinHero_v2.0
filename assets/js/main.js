@@ -293,6 +293,7 @@ function main()
         game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml');
     }
 
+    var musicCreds;
     var bmpText;
     var msgText;
     var scoreCounter;
@@ -322,6 +323,13 @@ function main()
         mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
         mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
         mutekey.onDown.add(muteOnClick, this);
+
+        // credit Pogo for the music
+        musicCreds = game.add.bitmapText(game.width-250, 90, 'desyrel','Music: "Boo Bass" by Pogo',18);
+        musicCreds.inputEnabled = true;
+        musicCreds.events.onInputDown.add(goToPogo, this);
+
+        
 
         dragon = new Dragon(game, 10, 300);
         //dragon = game.add.sprite(10,300,DRAGON_KEY);
@@ -696,6 +704,12 @@ function main()
         //for (var k=0; k < m_actorsList.length; k++)
         //    game.debug.body(m_actorsList[k]);
 
+    }
+
+    function goToPogo()
+    {
+        window.open("https://www.youtube.com/watch?v=0W1ULoLs6Cg");
+        // the game's tab will automatically mute when we switch to the pogo tab
     }
 
     function pauseOnClick() {
