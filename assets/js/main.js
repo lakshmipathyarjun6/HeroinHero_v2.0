@@ -19,11 +19,6 @@
  *************************************************************************/
 
 // GLOBAL VALUES
-var STARTING_HIGHNESS = 250;
-var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.15;
-var sfxCount = 300;
-var SFX_WAIT_TIME = 300;
 
 var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
@@ -40,7 +35,15 @@ var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
 var RECOVERY_KEY = 'recovery';
+var RED_KEY = 'red screen';
 var AUDIO_KEY = 'audio';
+
+var STARTING_HIGHNESS = 250;
+var MAX_HIGHNESS = 800;
+var HIGHNESS_DECR_VAL = 0.15;
+var sfxCount = 300;
+var SFX_WAIT_TIME = 300;
+var MSG_HEIGHT = 100;
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -112,7 +115,6 @@ Player = function(game, x, y, key)
 Player.prototype = Object.create(Actor.prototype);
 Player.prototype.constructor = Player;
 
-// perhaps walk method when I can implement it
 
 
 ///////////////////////////////////
@@ -273,6 +275,7 @@ function main()
         game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
+        game.load.image(RED_KEY, 'assets/images/other/red.png');
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
@@ -608,8 +611,8 @@ function main()
                     m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
                 }
                 else if (randInt >= 80 && randInt < (70 + scoreCounter / 160) )
-                // impossible to make evil roommates in the beginning of the game.
                 {
+                    // can't make evil roommates in the beginning of the game.
                     // increase # of evil roommates over time
                     m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
                 }
@@ -625,6 +628,7 @@ function main()
             /////////////////////////////
             // Write a message
             /////////////////////////////
+
             // decrement counter if necessary
             if (msgCounter > 1) // show the message a little longer
                 msgCounter--;
@@ -642,29 +646,27 @@ function main()
                 {
                   case 0:
                   case 1:
-                    msgText = game.add.bitmapText(game.width/2-200, 100, 'desyrel',"Don't let your highness meter take a hit!",20);
+                    msgText = game.add.bitmapText(game.width/2-200, MSG_HEIGHT, 'desyrel',"Don't let your highness meter take a hit!",20);
                     msgCounter = 500;
                     break;
                   case 2:
-                    msgText = game.add.bitmapText(game.width/2-45, 100, 'desyrel',"Hey, man!",20);
+                    msgText = game.add.bitmapText(game.width/2-45, MSG_HEIGHT, 'desyrel',"Hey, man!",20);
                     msgCounter = 500;
                     break;
                   case 3:
-                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Respect my authority!",20);
+                    msgText = game.add.bitmapText(game.width/2-100, MSG_HEIGHT, 'desyrel',"Respect my authority!",20);
                     msgCounter = 500;
                     break;
                   case 4:
                   case 5:
-                    msgText = game.add.bitmapText(game.width/2-90, 100, 'desyrel','"Catch me! Come on!"',20);
+                    msgText = game.add.bitmapText(game.width/2-90, MSG_HEIGHT, 'desyrel','"Catch me! Come on!"',20);
                     msgCounter = 500;
                     break;
                   case 6:
                   case 7:
-                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Ease the stress a bit...",20);
+                    msgText = game.add.bitmapText(game.width/2-100, MSG_HEIGHT, 'desyrel',"Ease the stress a bit...",20);
                     msgCounter = 500;
                     break;
-                  // more cases?
-
 
                   default:
                     // nothing
@@ -689,6 +691,13 @@ function main()
         if (pkup.strength > 0)
         {
             scoreCounter += pkup.strength;
+        }
+        else
+        {
+            // tint the screen red to show you're hurt
+            var redScreen = game.add.sprite(0,0,RED_KEY);
+            game.add.tween(redScreen).to( { alpha: 0 }, 600, Phaser.Easing.Linear.None, true);
+
         }
         if (m_player1.highness > MAX_HIGHNESS)
         {
