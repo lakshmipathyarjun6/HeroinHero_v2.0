@@ -22,7 +22,8 @@
 var STARTING_HIGHNESS = 250;
 var MAX_HIGHNESS = 800;
 var HIGHNESS_DECR_VAL = 0.15;
-var sfxCount = 200;
+var sfxCount = 300;
+var SFX_WAIT_TIME = 300;
 
 var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
@@ -491,7 +492,7 @@ function main()
             }
 
             if(scoreCounter >= sfxCount){
-                sfxCount += 200;
+                sfxCount += SFX_WAIT_TIME;
                 if (!muted)
                 {
                     sfx.play();
