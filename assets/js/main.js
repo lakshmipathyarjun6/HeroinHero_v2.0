@@ -43,7 +43,7 @@ var MAX_HIGHNESS = 800;
 var HIGHNESS_DECR_VAL = 0.15;
 var sfxCount = 300;
 var SFX_WAIT_TIME = 300;
-var MSG_HEIGHT = 100;
+var MSG_HEIGHT = 120;
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
@@ -241,7 +241,8 @@ from: http://www.chris.com/ascii/index.php?art=creatures%2Fdragons
 function main()
 {
     msgCounter = 0;
-    msgWait = 3000;
+    //msgWait = 3000;
+    msgWait = 100;
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
