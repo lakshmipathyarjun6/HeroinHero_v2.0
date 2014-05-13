@@ -345,8 +345,8 @@ function main()
         // set up m_player1
         m_player1 = new Player (game, game.width-100,game.height/2, PLAYER_KEY);
         //m_player1.body.velocity.x=-100;
-        m_player1.scale.x = .2;
-        m_player1.scale.y = .2;
+        //m_player1.scale.x = .2;
+        //m_player1.scale.y = .2;
         m_player1.animations.add('walk');
         m_player1.animations.play('walk',PLAYER_WALK_RATE,true);
 
