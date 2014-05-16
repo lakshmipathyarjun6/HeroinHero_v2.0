@@ -1,0 +1,20 @@
+{"frames": {
+
+"RetryButton.png":
+{
+	"frame": {"x":0,"y":0,"w":165,"h":80},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":165,"h":80},
+	"sourceSize": {"w":165,"h":80}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "retrybuttonspriteatlas.png",
+	"format": "RGBA8888",
+	"size": {"w":165,"h":80},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d61237e536e4c843fd967773ba0183d6:fae3e8248fdc56d0533337ff93459ec6:b39833fe1fd4342469ac5684a4cd8bac$"
+}
+}

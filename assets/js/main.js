@@ -235,7 +235,7 @@ function main()
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
-        game.load.audio(SFX_KEY, 'assets/audio/Catch_Me.m4a');
+        game.load.audio(SFX_KEY, 'assets/audio/Catch_Me.mp3');
         game.load.image(PLAYER2_KEY, 'assets/images/playerV2/PlayerV2.png');
         game.load.image(WEED_KEY, 'assets/images/drugs/marijuana/weed.png');
         game.load.image(ALCOHOL_KEY, 'assets/images/drugs/beer/Beer.png');
