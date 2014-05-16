@@ -1,8 +1,24 @@
+/**************************************************************************
+ *
+ * HeroinHero version 2.0
+ *
+ * Authors: Joraaver Chahal, Arjun Lakshmipathy, Nate Fischer
+ * Built at LA Hacks April 2014
+ *
+ * Based on the "Guitar Queer-o" episode from Southpark
+ *
+ * Music credit goes to Pogo. If you like the music, check out more of his
+ * stuff here:
+ * http://www.youtube.com/user/Fagottron
+ *
+ * This is an open source game. Feel free to distribute the source code.
+ * Feel free to play our game and distribute links to our game. If you want
+ * to be part of the development of this game, make a pull request on our
+ * Github Repo. Enjoy!
+ *
+ *************************************************************************/
+
 // GLOBAL VALUES
-var STARTING_HIGHNESS = 250;
-var MAX_HIGHNESS = 800;
-var HIGHNESS_DECR_VAL = 0.15;
-var sfxCount = 200;
 
 var NEXT_ARROW = 'next';
 var START_MENU_1 = 'smenu1';
@@ -10,7 +26,7 @@ var START_MENU_2 = 'smenu2';
 var MENU_KEY = 'menu';
 var PLAYER_KEY = 'ginger';
 var SFX_KEY = 'sfx';
-var PLAYER2_KEY = 'fob';
+var PLAYER2_KEY = 'asian';
 var DRAGON_KEY = 'dragon';
 var HEROIN_KEY = 'heroin';
 var ALCOHOL_KEY = 'alcohol';
@@ -19,16 +35,24 @@ var WATER_BUCKET_KEY = 'water_bucket';
 var FLOOR_KEY = 'floor';
 var DEATH_KEY = 'death';
 var RECOVERY_KEY = 'recovery';
+var RED_KEY = 'red screen';
 var AUDIO_KEY = 'audio';
+
+var STARTING_HIGHNESS = 250;
+var MAX_HIGHNESS = 800;
+var HIGHNESS_DECR_VAL = 0.15;
+var sfxCount = 300;
+var SFX_WAIT_TIME = 300;
+var MSG_HEIGHT = 120;
 var SCROLL_SPEED = 2;
 var CANVAS_Y_MAX = 50;
 var CANVAS_Y_MIN = 0;
 var CANVAS_X_MAX = 920;
 var CANVAS_X_MIN = 0;
-var BOUND_BOTTOM = 0;
-var BOUND_TOP = 0;
-var BOUND_LEFT = 0;
-var BOUND_RIGHT = 0;
+var BOUND_TOP = 250;
+var BOUND_LEFT = 500; // starting value
+var BOUND_RIGHT; // initialized later
+var BOUND_BOTTOM; // initialized later
 var DRAGON_LEFT = 0;
 var DRAGON_DOWN = 0;
 var PAUSE_BUTTON = 'pause';
@@ -71,8 +95,6 @@ Actor = function (game, x, y, key)
 
     // Enable game physics
     game.physics.enable(this, Phaser.Physics.ARCADE);
-
-    // DEBUG
 };
 
 Actor.prototype = Object.create(Phaser.Sprite.prototype);
@@ -93,7 +115,6 @@ Player = function(game, x, y, key)
 Player.prototype = Object.create(Actor.prototype);
 Player.prototype.constructor = Player;
 
-// perhaps walk method when I can implement it
 
 
 ///////////////////////////////////
@@ -187,6 +208,30 @@ Roommate = function (game, x, y)
 Roommate.prototype = Object.create(Pickup.prototype);
 Roommate.prototype.constructor = Roommate;
 
+/*
+
+                       .     _///_,
+                     .      / ` ' '>
+                       )   o'  __/_'>
+                      (   /  _/  )_\'>
+                       ' "__/   /_/\_>
+                           ____/_/_/_/
+                          /,---, _/ /
+                         ""  /_/_/_/
+                            /_(_(_(_                 \
+                           (   \_\_\\_               )\
+                            \'__\_\_\_\__            ).\
+                            //____|___\__)           )_/
+                            |  _  \'___'_(           /'
+                             \_ (-'\'___'_\      __,'_'
+                             __) \  \\___(_   __/.__,'
+                   b'ger  ,((,-,__\  '", __\_/. __,'
+                                       '"./_._._-'
+
+You caught the dragon!
+from: http://www.chris.com/ascii/index.php?art=creatures%2Fdragons
+
+*/
 
 ///////////////////////////////////
 // Main function
@@ -196,7 +241,8 @@ Roommate.prototype.constructor = Roommate;
 function main()
 {
     msgCounter = 0;
-    msgWait = 3000;
+    //msgWait = 3000;
+    msgWait = 100;
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
@@ -205,9 +251,7 @@ function main()
     var audioelement = document.createElement('audio');
     var sfxelement = document.createElement('audio');
     BOUND_BOTTOM = game.height-100;
-    BOUND_TOP = 250;
     BOUND_RIGHT = game.width-100;
-    BOUND_LEFT = 300;
 
 
 
@@ -232,6 +276,7 @@ function main()
         game.load.image(FLOOR_KEY, 'assets/images/floor/background4.png');
         game.load.image(DEATH_KEY, 'assets/images/other/BlueScreen.png');
         game.load.image(RECOVERY_KEY, 'assets/images/other/BlueScreen2.png');
+        game.load.image(RED_KEY, 'assets/images/other/red.png');
         game.load.image(HEROIN_KEY, 'assets/images/drugs/heroin/heroinsyringe.png');
         game.load.image(WATER_BUCKET_KEY, 'assets/images/other/Water_Bucket.png');
         game.load.audio(AUDIO_KEY, 'assets/audio/Game_Music.mp3');
@@ -252,6 +297,7 @@ function main()
         game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml');
     }
 
+    var musicCreds;
     var bmpText;
     var msgText;
     var scoreCounter;
@@ -262,6 +308,13 @@ function main()
 
     function create ()
     {
+        // play music
+        sfx = game.add.audio(SFX_KEY);
+        music = game.add.audio(AUDIO_KEY);
+        sfx.loop = false;
+        music.loop = true;
+        music.play();
+
         //setup floor
         floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
@@ -275,6 +328,13 @@ function main()
         mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
         mutekey.onDown.add(muteOnClick, this);
 
+        // credit Pogo for the music
+        musicCreds = game.add.bitmapText(game.width-250, 90, 'desyrel','Music: "Boo Bass" by Pogo',18);
+        musicCreds.inputEnabled = true;
+        musicCreds.events.onInputDown.add(goToPogo, this);
+
+        
+
         dragon = new Dragon(game, 10, 300);
         //dragon = game.add.sprite(10,300,DRAGON_KEY);
         dragon.scale.y = .3;
@@ -286,8 +346,8 @@ function main()
         // set up m_player1
         m_player1 = new Player (game, game.width-100,game.height/2, PLAYER_KEY);
         //m_player1.body.velocity.x=-100;
-        m_player1.scale.x = .2;
-        m_player1.scale.y = .2;
+        //m_player1.scale.x = .2;
+        //m_player1.scale.y = .2;
         m_player1.animations.add('walk');
         m_player1.animations.play('walk',PLAYER_WALK_RATE,true);
 
@@ -316,15 +376,9 @@ function main()
 
         game.time.events.repeat(Phaser.Timer.SECOND * 1, 100000, randomizeBG, this);
 
-        sfx = game.add.audio(SFX_KEY);
-        music = game.add.audio(AUDIO_KEY);
-        sfx.loop = false;
-        music.loop = true;
-        music.play();
-
     }
 
-    m_actorsList = new Array(); // empty
+    var m_actorsList = new Array(); // empty
 
 
     function update()
@@ -342,6 +396,19 @@ function main()
             {
                 endOfGame();
             }
+
+            // adjust player's box
+            if (scoreCounter >= 0 && scoreCounter < 1000)
+                BOUND_LEFT = 400 + ((1000-scoreCounter) / 10);
+
+            else if (scoreCounter >= 1000 && scoreCounter < 2000)
+                BOUND_LEFT = 340 + ((2000-scoreCounter) / 16);
+
+            else if (scoreCounter >= 2000 && scoreCounter < 3000)
+                BOUND_LEFT = 300 + ((3000-scoreCounter) / 25);
+
+            else
+                BOUND_LEFT = 300;
 
 
             var numPickups = m_actorsList.length;
@@ -375,6 +442,7 @@ function main()
                     // He's dead, Jim
                     m_actorsList[k].exists = false; // clear from screen
                     m_actorsList[k].destroy();
+                    delete m_actorsList[k]; // free memory
                     m_actorsList.splice(k,1); // remove that one element
 
 
@@ -435,11 +503,14 @@ function main()
                     dragon.y -= dragon_speed/2;
             }
 
-            if(!muted && (scoreCounter >= sfxCount)){
-                sfxCount += 200;
-                sfx.play();
+            if(scoreCounter >= sfxCount){
+                sfxCount += SFX_WAIT_TIME;
+                if (!muted)
+                {
+                    sfx.play();
+                }
             }
-                
+
 
             /////////////////////////////
             // Get user input
@@ -541,8 +612,8 @@ function main()
                     m_actorsList.push(new HeroinPickup(game, dragon.x+100, dragon.y+100) );
                 }
                 else if (randInt >= 80 && randInt < (70 + scoreCounter / 160) )
-                // impossible to make evil roommates in the beginning of the game.
                 {
+                    // can't make evil roommates in the beginning of the game.
                     // increase # of evil roommates over time
                     m_actorsList.push(new Roommate(game, dragon.x+100, dragon.y+100) );
                 }
@@ -558,6 +629,7 @@ function main()
             /////////////////////////////
             // Write a message
             /////////////////////////////
+
             // decrement counter if necessary
             if (msgCounter > 1) // show the message a little longer
                 msgCounter--;
@@ -575,29 +647,27 @@ function main()
                 {
                   case 0:
                   case 1:
-                    msgText = game.add.bitmapText(game.width/2-200, 100, 'desyrel',"Don't let your highness meter take a hit!",20);
+                    msgText = game.add.bitmapText(game.width/2-200, MSG_HEIGHT, 'desyrel',"Don't let your highness meter take a hit!",20);
                     msgCounter = 500;
                     break;
                   case 2:
-                    msgText = game.add.bitmapText(game.width/2-45, 100, 'desyrel',"Hey, man!",20);
+                    msgText = game.add.bitmapText(game.width/2-45, MSG_HEIGHT, 'desyrel',"Hey, man!",20);
                     msgCounter = 500;
                     break;
                   case 3:
-                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Respect my authority!",20);
+                    msgText = game.add.bitmapText(game.width/2-100, MSG_HEIGHT, 'desyrel',"Respect my authority!",20);
                     msgCounter = 500;
                     break;
                   case 4:
                   case 5:
-                    msgText = game.add.bitmapText(game.width/2-90, 100, 'desyrel','"Catch me! Come on!"',20);
+                    msgText = game.add.bitmapText(game.width/2-90, MSG_HEIGHT, 'desyrel','"Catch me! Come on!"',20);
                     msgCounter = 500;
                     break;
                   case 6:
                   case 7:
-                    msgText = game.add.bitmapText(game.width/2-100, 100, 'desyrel',"Ease the stress a bit...",20);
+                    msgText = game.add.bitmapText(game.width/2-100, MSG_HEIGHT, 'desyrel',"Ease the stress a bit...",20);
                     msgCounter = 500;
                     break;
-                  // more cases?
-
 
                   default:
                     // nothing
@@ -623,6 +693,13 @@ function main()
         {
             scoreCounter += pkup.strength;
         }
+        else
+        {
+            // tint the screen red to show you're hurt
+            var redScreen = game.add.sprite(0,0,RED_KEY);
+            game.add.tween(redScreen).to( { alpha: 0 }, 600, Phaser.Easing.Linear.None, true);
+
+        }
         if (m_player1.highness > MAX_HIGHNESS)
         {
             m_player1.highness = MAX_HIGHNESS;
@@ -634,8 +711,15 @@ function main()
             game.debug.geom(highnessMeter,'#ff0000');
         }
         //game.debug.body(m_player1);
-        //game.debug.body(heroin_syringe);
-        //game.debug.body();
+        //for (var k=0; k < m_actorsList.length; k++)
+        //    game.debug.body(m_actorsList[k]);
+
+    }
+
+    function goToPogo()
+    {
+        window.open("https://www.youtube.com/watch?v=0W1ULoLs6Cg");
+        // the game's tab will automatically mute when we switch to the pogo tab
     }
 
     function pauseOnClick() {
@@ -709,11 +793,11 @@ function main()
 
         //  When the cross-fade is complete we swap the image being shown by the now hidden picture
         //tween.onComplete.add(changePicture, this);
-        game.time.events.add(Phaser.Timer.SECOND * 8,start, this);
+        game.time.events.add(Phaser.Timer.SECOND * 8,startGame, this);
 
     }
 
-    function start() {
+    function startGame() {
         if (!gameHasStarted)
         {
             next.destroy();
@@ -725,6 +809,11 @@ function main()
             gameHasStarted = true;
         }
     }
+
+
+    var death;
+    var retry_button;
+    var quit_button;
 
     function endOfGame()
     {
@@ -769,14 +858,20 @@ function main()
         music.play();
         if (muted)
         {
-            // we don't really want the music to be heard then
+            // we don't really want the music to be heard in this case
             music.pause()
             // we update the mute button to start with the correct image
             mute.setFrames(0,1,0);
         }
         death.destroy();
+        delete death;
+
         retry_button.destroy();
+        delete retry_button;
+
         quit_button.destroy();
+        delete quit_button;
+
         paused = false;
         calledEnd = false;
     }
@@ -787,8 +882,15 @@ function main()
         {
             m_actorsList[k].isAlive = false;
         }
+        death.destroy();
+        delete death;
+
         retry_button.destroy();
+        delete retry_button;
+
         quit_button.destroy();
+        delete quit_button;
+
         recovery = game.add.sprite(0,0,RECOVERY_KEY);
     }
     function nextOnClick()
@@ -797,7 +899,7 @@ function main()
             fadePictures();
         } else {
             next.destroy();
-            start();
+            startGame();
         }
     }
     function getUser(){

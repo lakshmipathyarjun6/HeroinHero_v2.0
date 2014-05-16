@@ -6,8 +6,9 @@ A meaningful expansion to the timeless classic, Heroin Hero.
 On the Web
 ----------
 
-Does it run on the web? Not yet. But we intend to host it after LAhacks
-and we will update our README right here to reflect the URL when we do.
+You can play our project on the web at:
+
+http://heroinhero.clay.io/
 
 About Our Project
 -----------------
