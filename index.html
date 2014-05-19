@@ -10,7 +10,7 @@
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script>
             var Clay = Clay || {};
-            Clay.gameKey = "chasethedragon";
+            Clay.gameKey = "heroinhero";
             Clay.readyFunctions = [];
             Clay.ready = function( fn ) {
             Clay.readyFunctions.push( fn );
@@ -32,7 +32,7 @@
             </ul>
             <ul id = "userinfo">
                 <li id = "username">Name:</li>
-                <li><input type="text" id = "name" /></li>
+                <li><input type="text" id = "name" maxlength="40"/></li>
             </ul>
             <input type="button" value = "See Leaderboards!" id = "submit" />
         </div>

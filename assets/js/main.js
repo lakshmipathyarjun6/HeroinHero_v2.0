@@ -244,6 +244,7 @@ function main()
     //msgWait = 3000;
     msgWait = 100;
 
+    console.log(screen.height + " " + screen.width);
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
     var dragon_speed = 4;
@@ -308,7 +309,7 @@ function main()
 
     function create ()
     {
-        // play music
+        // setup music
         sfx = game.add.audio(SFX_KEY);
         music = game.add.audio(AUDIO_KEY);
         sfx.loop = false;
@@ -318,22 +319,21 @@ function main()
         //setup floor
         floor = game.add.tileSprite(0,game.height/4, game.width,600,'floor');
 
-        //create pause button
+        // create buttons
         pause = game.add.button(30,30,PAUSE_BUTTON,pauseOnClick,this,1,0,1);
-        pausekey = game.input.keyboard.addKey(Phaser.Keyboard.P);
-        pausekey.onDown.add(pauseOnClick, this);
-
-        //create mute button
         mute = game.add.button(game.width-100,30,MUTE_BUTTON,muteOnClick,this,1,0,1);
-        mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-        mutekey.onDown.add(muteOnClick, this);
 
         // credit Pogo for the music
         musicCreds = game.add.bitmapText(game.width-250, 90, 'desyrel','Music: "Boo Bass" by Pogo',18);
         musicCreds.inputEnabled = true;
         musicCreds.events.onInputDown.add(goToPogo, this);
 
+        bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
         
+
+
+        // call new game
+        initGame();
 
         dragon = new Dragon(game, 10, 300);
         //dragon = game.add.sprite(10,300,DRAGON_KEY);
@@ -342,21 +342,6 @@ function main()
         dragon.animations.add('fly');
         dragon.animations.play('fly',DRAGON_FLY_RATE,true);
 
-
-        // set up m_player1
-        m_player1 = new Player (game, game.width-100,game.height/2, PLAYER_KEY);
-        //m_player1.body.velocity.x=-100;
-        //m_player1.scale.x = .2;
-        //m_player1.scale.y = .2;
-        m_player1.animations.add('walk');
-        m_player1.animations.play('walk',PLAYER_WALK_RATE,true);
-
-        //m_player2 = new Player (game, game.width-300,game.height/2+100, PLAYER2_KEY);
-
-        // highness meter & score counter
-        highnessMeter = new Phaser.Rectangle(0,0,m_player1.highness,10);
-        scoreCounter = 0; // initial score
-        bmpText = game.add.bitmapText(game.width/2-100, 50, 'desyrel','Your score: ',30);
 
 
         smenu2 = game.add.sprite(0,0,START_MENU_2);
@@ -826,7 +811,28 @@ function main()
         m_player1.animations.stop("walk",true);
         dragon.animations.stop("fly",true);
 
+
+        //////////////////////////////
+        // Clean up
+        //////////////////////////////
+
         music.stop();
+        
+        // we must removeKey to get 'p' and 'm' back for leaderboards
+        game.input.keyboard.removeKey(Phaser.Keyboard.P);
+        delete pausekey;
+        game.input.keyboard.removeKey(Phaser.Keyboard.M);
+        delete mutekey;
+
+        // he's dead
+        m_player1.destroy();
+
+        delete highnessMeter;
+
+        //////////////////////////////
+        // Create death screen
+        //////////////////////////////
+
         death = game.add.sprite(0,0,DEATH_KEY);
         death.anchor.setTo(0, 0);
         death.alpha = 0;
@@ -847,14 +853,13 @@ function main()
         SCROLL_SPEED = 2;
 
         // restore animations
-        m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
+        //m_player1.animations.play("walk",PLAYER_WALK_RATE,true);
         dragon.animations.play("fly",DRAGON_FLY_RATE,true);
 
-        m_player1.x = game.width-100;
-        m_player1.y = game.height/2;
-        m_player1.highness = STARTING_HIGHNESS;
-        m_player1.isAlive = true;
-        scoreCounter = 0;
+        //m_player1.x = game.width-100;
+        //m_player1.y = game.height/2;
+        //m_player1.highness = STARTING_HIGHNESS;
+        //m_player1.isAlive = true;
         music.play();
         if (muted)
         {
@@ -874,6 +879,10 @@ function main()
 
         paused = false;
         calledEnd = false;
+
+        // call new game
+        initGame();
+
     }
 
     function actionQuit()
@@ -911,6 +920,37 @@ function main()
         $('#submit').css('left',$(document).width()/2 - $('#submit').width()/2+'px');
 
     };
+
+    function initGame()
+    {
+        /* function to initialize a new game
+         * 
+         * This does not contain things that need only be done once upon
+         * loading the game. This should only have things necessary to
+         * calling a new game (like when the player dies and chooses to
+         * play again).
+        */
+
+        $('#info').css('display','none');
+        //create pause button
+        pausekey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+        pausekey.onDown.add(pauseOnClick, this);
+
+        //create mute button
+        mutekey = game.input.keyboard.addKey(Phaser.Keyboard.M);
+        mutekey.onDown.add(muteOnClick, this);
+
+        // set up m_player1
+        m_player1 = new Player (game, game.width-100,game.height/2, PLAYER_KEY);
+        m_player1.animations.add('walk');
+        m_player1.animations.play('walk',PLAYER_WALK_RATE,true);
+
+        // highness meter & score counter
+        highnessMeter = new Phaser.Rectangle(0,0,m_player1.highness,10);
+        scoreCounter = 0; // initial score
+
+    }
+
 };
 
 
