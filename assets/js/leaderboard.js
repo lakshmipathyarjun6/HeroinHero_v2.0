@@ -8,6 +8,7 @@ var uploading = $(document).ready(function(){
     //$('#submit').css('display','none');
     
     $("#submit").click(function() {
+        console.log("Clicked dangt");
         Clay.ready(function() {
             var leaderboard = new Clay.Leaderboard({id: 'CTDleaderboard'});
             
@@ -21,7 +22,7 @@ var uploading = $(document).ready(function(){
                 //filter: ['day', 'month'], // Optional, Array of filters to narrow down high scores
                 //cumulative: false, // Optional, if set to true grabs the sum of all scores for each player
                 //best: false, // Optional, if set to true grabs the best score from each player 
-                limit: 50, // Optional, how many scores to show (0 for all). Default is 10
+                limit: 10, // Optional, how many scores to show (0 for all). Default is 10
                 //self: true, // Optional, Boolean if set to true shows just the scores of the player viewing
                 //friends: false, // Optional, Boolean if set to true shows just the scores of the player viewing AND their Clay.io friends
                 showPersonal: true // Optional, Boolean on if the player's stats (rank & high score) should show below the name. Default is false
