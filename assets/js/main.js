@@ -244,6 +244,7 @@ function main()
     //msgWait = 3000;
     msgWait = 100;
 
+    console.log(screen.height + " " + screen.width);
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
     var dragon_speed = 4;
