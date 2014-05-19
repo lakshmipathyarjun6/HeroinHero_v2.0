@@ -1,0 +1,20 @@
+{
+  "manifest_version":2,
+  "name":"Heroin Hero v2.0",
+  "description":"A charming and meaningful enhancement to the timeless classic Heroin Hero. Can you catch the dragon or will you just...keep chasing it?",
+  "version":"1.0.0",
+  "content_security_policy":"script-src 'self' https://clay.io https://clay.io:846; object-src 'self'",
+  "icons":[
+    
+  ],
+  "app":{
+    "launch":{
+      “local”:”HeroinHero_v2.0/index.html”,
+      "web_url":"http://heroinhero.clay.io"
+    }
+  },
+  "permissions":[
+    "unlimitedStorage"
+  ],
+  "offline_enabled":true
+}
