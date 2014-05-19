@@ -930,6 +930,7 @@ function main()
          * play again).
         */
 
+        $('#info').css('display','none');
         //create pause button
         pausekey = game.input.keyboard.addKey(Phaser.Keyboard.P);
         pausekey.onDown.add(pauseOnClick, this);
