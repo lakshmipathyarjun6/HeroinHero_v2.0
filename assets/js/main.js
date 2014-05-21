@@ -244,7 +244,7 @@ function main()
     //msgWait = 3000;
     msgWait = 100;
 
-    console.log(screen.height + " " + screen.width);
+    //console.log(screen.height + " " + screen.width);
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update: update, render: render });
 
     var dragon_speed = 4;
@@ -802,7 +802,9 @@ function main()
 
     function endOfGame()
     {
+        // get username for leaderboard
         getUser();
+
         calledEnd = true;
         SCROLL_SPEED = 0;
         paused = true;
@@ -911,9 +913,18 @@ function main()
             startGame();
         }
     }
+    function transform2(input)
+    {
+        input = input + 17;
+        input = input * 257;
+
+        return input;
+    }
     function getUser(){
         $('#info').css('display','show');
         document.getElementById('score').innerHTML=scoreCounter;
+        var val = transform2(scoreCounter);
+        document.getElementById('player_num').innerHTML=val;
         //$('#username').css('display','show');
         //$('#submit').css('display','show');
         $('#info').css('left',$(document).width()/2 - $('#info').width()/2+'px');
