@@ -923,8 +923,12 @@ function main()
     function getUser(){
         $('#info').css('display','show');
         document.getElementById('score').innerHTML=scoreCounter;
-        var val = transform2(scoreCounter);
-        document.getElementById('player_num').innerHTML=val;
+        //var val = transform2(scoreCounter);
+        //document.getElementById('player_num').innerHTML=val;
+
+        // set the score in javascript so it can't be messed with
+        sendScore("setScore", scoreCounter);
+
         //$('#username').css('display','show');
         //$('#submit').css('display','show');
         $('#info').css('left',$(document).width()/2 - $('#info').width()/2+'px');
@@ -963,5 +967,4 @@ function main()
     }
 
 };
-
 

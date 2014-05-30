@@ -1,15 +1,45 @@
+//function transform2(input)
+//{
+//    input = input / 257;
+//    input = input - 17;
+//
+//    return input;
+//}
 
-function transform2(input)
+
+function checkCheating(s1, s2)
 {
-    input = input / 257;
-    input = input - 17;
+    // returns true if there is cheating, false otherwise
+    if (s1 != s2)
+        return true;
 
-    return input;
+    if ((s1 % 10) != 0 )
+        return true;
+
+    if (s1 > 5500) // nobody is this addicted to the game
+        return true;
+
+
+    return false; // assume no cheating otherwise
 }
 
 
+var uploading = $(document).ready(sendScoreWrapper() );
 
-var uploading = $(document).ready(function(){
+function sendScoreWrapper()
+{
+    sendScore("", 0);
+}
+
+var score2;
+function sendScore (mode, newScore)
+{
+    if (mode == "setScore")
+    {
+        score2 = newScore;
+        return;
+    }
+
     $('#info').css('display','none');
     //$('#username').css('display','none');
     //$('#submit').css('display','none');
@@ -20,16 +50,20 @@ var uploading = $(document).ready(function(){
             var leaderboard = new Clay.Leaderboard({id: 'CTDleaderboard'});
 
             var username = $("#name").val();
-            var score1 = document.getElementById("score").innerHTML;
-            var score2 = document.getElementById("player_num").innerHTML;
-            score2 = transform2(score2);
-            var score = score1;
-            if (score1 != score2)
+            var score = document.getElementById("score").innerHTML;
+            //var score2 = document.getElementById("player_num").innerHTML;
+
+            //score2 = transform2(score2);
+            if (checkCheating(score, score2) )
             {
-                // they must be cheating
-                console.log("Looks like you've been cheating...\nNew score is 0");
+                // there was cheating
+                console.log("Looks like you've been cheating...");
+                console.log("Your score has been set to 0");
+
                 score = 0;
             }
+            //console.log(score);
+            //console.log(score2);
 
             var options = {score: score,name:username};
             var showoptions = { // all of these are optional
@@ -49,10 +83,10 @@ var uploading = $(document).ready(function(){
                 //$('#username').css('display','none');
                 //$('#submit').css('display','none');
                 leaderboard.show( showoptions,function(response) {
-                    console.log( response );
+                    //console.log( response );
                 });
             });
         });
     });
-});
+}
 
